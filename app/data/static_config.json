@@ -1,0 +1,31 @@
+{
+  "valid_locations": [
+    "Oslo", "Trondheim", "Bergen", "Tromsø", "Stavanger"
+  ],
+  "facility_types": {
+    "data_center": {
+      "baseline_kwh": 2500000,
+      "size_multipliers": {
+        "small": 0.75,
+        "medium": 1.0,
+        "large": 1.25
+      }
+    },
+    "factory": {
+      "baseline_kwh": 750000,
+      "size_multipliers": {
+        "small": 0.85,
+        "medium": 1.0,
+        "large": 1.2
+      }
+    },
+    "hospital": {
+      "baseline_kwh": 500000,
+      "size_multipliers": {
+        "small": 0.9,
+        "medium": 1.0,
+        "large": 1.1
+      }
+    }
+  }
+}
