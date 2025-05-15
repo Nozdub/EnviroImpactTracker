@@ -40,9 +40,14 @@ def calculate(input_data: CalculationInput):
             print(f"Custom KWh provided: {input_data.custom_kwh}")
             estimated_kwh = float(input_data.custom_kwh) * multiplier
         else:
+            facility_data = config["facility_types"][input_data.facility_type]
             baseline = facility_data["baseline_kwh"]
-            print(f"Using baseline: {baseline}")
+            multiplier = facility_data["size_multipliers"][input_data.size]
             estimated_kwh = baseline * multiplier
+
+            print(f"📦 Using baseline: {baseline}")
+            print(f"🔢 Using size multiplier: {multiplier}")
+            print(f"⚡ Estimated kWh (baseline × multiplier): {estimated_kwh}")
 
     except Exception as e:
         print(" ERROR during kWh calculation:", e)
