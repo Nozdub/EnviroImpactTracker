@@ -1,11 +1,19 @@
 from pydantic import BaseModel
-from typing import Optional
+from typing import Optional, Literal
 
 
 class CalculationInput(BaseModel):
-    location: str
-    facility_type: str
-    size: str
+    region: Literal[
+        "Østfold", "Akershus", "Oslo", "Hedmark", "Oppland", "Buskerud", "Vestfold",
+        "Telemark", "Agder", "Rogaland", "Hordaland", "Møre og Romsdal",
+        "Sogn og Fjordane", "Trøndelag", "Nordland", "Troms", "Finnmark"
+    ]
+    facility_type: Literal[
+        "data_center", "factory", "hospital", "farm", "warehouse", "office_building",
+        "school", "supermarket", "retail_store", "university", "municipal_building"
+    ]
+    size: Literal["small", "medium", "large"]
+
     custom_kwh: Optional[float] = None
     machine_count: Optional[int] = None
     usage_pattern: Optional[str] = None

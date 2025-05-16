@@ -8,79 +8,68 @@ router = APIRouter()
 @router.post("/calculate")
 def calculate(input_data: CalculationInput):
     config = load_static_config()
-    print(" Loaded config")
 
-    # Validate location
-    valid_locations = config.get("valid_locations", [])
-    if input_data.location not in valid_locations:
-        print(f" Invalid location: {input_data.location}")
-        raise HTTPException(status_code=400, detail=f"Invalid location: {input_data.location}")
+    # Check region
+    if input_data.region not in config["regions"]:
+        raise HTTPException(status_code=400, detail=f"Invalid region: {input_data.region}")
 
-    # Validate facility type
-    facility_config = config.get("facility_types", {})
-    if input_data.facility_type not in facility_config:
-        print(f" Invalid facility type: {input_data.facility_type}")
+    # Check facility type
+    facility_data = config["facility_types"].get(input_data.facility_type)
+    if not facility_data:
         raise HTTPException(status_code=400, detail=f"Invalid facility type: {input_data.facility_type}")
 
-    # Validate size
-    size_multipliers = facility_config[input_data.facility_type].get("size_multipliers", {})
-    if input_data.size not in size_multipliers:
-        print(f" Invalid size: {input_data.size}")
-        raise HTTPException(status_code=400, detail=f"Invalid size '{input_data.size}' for facility type '{input_data.facility_type}'")
+    # Check size
+    if input_data.size not in facility_data["size_multipliers"]:
+        raise HTTPException(status_code=400, detail=f"Invalid size: {input_data.size}")
 
-    print(" All inputs valid")
+    # Base calculations
 
-    # Calculate expected electricity usage
-    try:
-        facility_data = config["facility_types"][input_data.facility_type]
+    # Determine baseline kWh
+    if input_data.custom_kwh is not None:
+        estimated_kwh = float(input_data.custom_kwh)
+    else:
+        baseline = facility_data["baseline_kwh"]
         multiplier = facility_data["size_multipliers"][input_data.size]
-        print(f" Multiplier: {multiplier}")
+        estimated_kwh = baseline * multiplier
 
-        if input_data.custom_kwh is not None:
-            print(f"Custom KWh provided: {input_data.custom_kwh}")
-            estimated_kwh = float(input_data.custom_kwh) * multiplier
-        else:
-            facility_data = config["facility_types"][input_data.facility_type]
-            baseline = facility_data["baseline_kwh"]
-            multiplier = facility_data["size_multipliers"][input_data.size]
-            estimated_kwh = baseline * multiplier
+        # Emission calculation
+        emission_factor = input_data.custom_emission_factor or config["emission_factors"]["default"]
+        estimated_co2_kg = estimated_kwh * emission_factor
 
-            print(f"Using baseline: {baseline}")
-            print(f"Using size multiplier: {multiplier}")
-            print(f"Estimated kWh (baseline × multiplier): {estimated_kwh}")
+        # Determine industry class and price modifier
+        industry_class = facility_data.get("industry_class", "household")
+        industry_modifier = config["industry_classes"].get(industry_class, 1.0)
 
-    except Exception as e:
-        print(" ERROR during kWh calculation:", e)
-        raise HTTPException(status_code=500, detail="Internal server error during energy calculation")
+        # Get power grid region and base price
+        power_region = config["power_grid_regions"].get(input_data.region)
+        if not power_region:
+            raise HTTPException(status_code=400, detail=f"Region '{input_data.region}' has no power grid mapping.")
 
-    # Emission factor from config
-    emission_factor = (
-        input_data.custom_emission_factor
-        if input_data.custom_emission_factor is not None
-        else config["emission_factors"]["default"]
-    )
-    estimated_co2_kg = estimated_kwh * emission_factor
+        # Placeholder: Fetch dynamic price here in future implementation
+        base_price = config["pricing"].get("default_nok_per_kwh", 1.20)
 
-    # Load pricing info
-    price_per_kwh = (
-        input_data.custom_price_per_kwh
-        if input_data.custom_price_per_kwh is not None
-        else config["pricing"]["default_nok_per_kwh"]
-    )
-    estimated_cost_nok = estimated_kwh * price_per_kwh
+        # Override with user input if given
+        effective_price = input_data.custom_price_per_kwh or (base_price * industry_modifier)
+        estimated_cost_nok = estimated_kwh * effective_price
 
-    print(f"Emission factor used: {emission_factor}")
-    print(f"Price per kWh used: {price_per_kwh}")
-    print(f"Estimated c02 output: {estimated_co2_kg}")
-    print(f"Estimated cost in nok: {estimated_cost_nok}")
-
-    # Return result
-    return {
-        "status": "valid",
-        "estimated_kwh": estimated_kwh,
-        "estimated_co2_kg": round(estimated_co2_kg, 2),
-        "estimated_cost_nok": round(estimated_cost_nok, 2),
-        "received": input_data.model_dump()
-    }
+        return {
+            "status": "valid",
+            "estimated_kwh": round(estimated_kwh, 2),
+            "estimated_co2_kg": round(estimated_co2_kg, 2),
+            "estimated_cost_nok": round(estimated_cost_nok, 2),
+            "metadata": {
+                "region": input_data.region,
+                "power_grid_region": power_region,
+                "industry_class": industry_class,
+                "industry_modifier": industry_modifier,
+                "price_per_kwh": round(effective_price, 3),
+                "emission_factor_used": emission_factor
+            },
+            "received": input_data.model_dump()
+        }
 
 
+@router.get("/regions")
+def get_regions():
+    config = load_static_config()
+    return {"regions": config["regions"]}

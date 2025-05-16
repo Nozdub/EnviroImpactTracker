@@ -13,17 +13,12 @@
 
             <form id="impactForm">
                 <div class="mb-3">
-                    <label for="location" class="form-label">
-                        1. Location
-                        <i class="bi bi-info-circle ms-1" data-bs-toggle="tooltip" title="Choose the county where the facility is located. This affects electricity emissions and pricing."></i>
+                    <label for="location" class="form-label" data-bs-toggle="tooltip"
+                           title="Choose the region where the facility is located. This affects electricity pricing and emissions.">
+                        1. Region
                     </label>
                     <select id="location" class="form-select">
-                        <option value="">-- Select Location --</option>
-                        <option>Oslo</option>
-                        <option>Bergen</option>
-                        <option>Trondheim</option>
-                        <option>Tromsø</option>
-                        <option>Stavanger</option>
+                        <option value="">-- Loading regions... --</option>
                     </select>
                 </div>
 
