@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\EnviroImpactFrontend.props" />
+</Project>

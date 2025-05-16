@@ -1,0 +1,101 @@
+﻿@page
+@model EnviroImpactFrontend.Pages.CalculateModel
+@{
+    ViewData["Title"] = "Calculate";
+}
+
+<div class="row">
+    <!-- Input Panel -->
+    <div class="col-md-6">
+        <h2>Calculate Your Impact</h2>
+        <p>Fill out the form to estimate electricity usage, emissions and cost.</p>
+
+        <form id="impactForm">
+            <div class="mb-3">
+                <label for="location" class="form-label">Location</label>
+                <select id="location" class="form-select">
+                    <option>Oslo</option>
+                    <option>Bergen</option>
+                    <option>Trondheim</option>
+                    <option>Tromsø</option>
+                    <option>Stavanger</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="facilityType" class="form-label">Facility Type</label>
+                <select id="facilityType" class="form-select">
+                    <option>data_center</option>
+                    <option>factory</option>
+                    <option>hospital</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="size" class="form-label">Size</label>
+                <select id="size" class="form-select">
+                    <option>small</option>
+                    <option>medium</option>
+                    <option>large</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="machineCount" class="form-label">Machine Count</label>
+                <input type="number" class="form-control" id="machineCount" />
+            </div>
+
+            <div class="mb-3">
+                <label for="usagePattern" class="form-label">Usage Pattern</label>
+                <select id="usagePattern" class="form-select">
+                    <option>constant</option>
+                    <option>peak</option>
+                    <option>intermittent</option>
+                </select>
+            </div>
+
+            <!-- Advanced Options Toggle -->
+            <div class="form-check form-switch mb-3">
+                <input class="form-check-input" type="checkbox" id="advancedToggle">
+                <label class="form-check-label" for="advancedToggle">Advanced Options</label>
+            </div>
+
+            <!-- Advanced Inputs (hidden by default) -->
+            <div id="advancedFields" style="display:none;">
+                <div class="mb-3">
+                    <label for="customKwh" class="form-label">Custom kWh</label>
+                    <input type="number" class="form-control" id="customKwh" />
+                </div>
+                <div class="mb-3">
+                    <label for="customEmission" class="form-label">Custom CO₂ Factor (kg/kWh)</label>
+                    <input type="number" class="form-control" id="customEmission" step="0.0001" />
+                </div>
+                <div class="mb-3">
+                    <label for="customPrice" class="form-label">Custom Price (NOK/kWh)</label>
+                    <input type="number" class="form-control" id="customPrice" step="0.01" />
+                </div>
+            </div>
+
+            <div class="d-grid mt-4">
+                <button type="submit" class="btn btn-primary btn-lg">Calculate</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Output Panel -->
+    <div class="col-md-6" id="resultPanel" style="display:none;">
+        <h2>Facility Results</h2>
+        <p class="lead">Your facility is expected to:</p>
+        <ul class="list-group">
+            <li class="list-group-item">
+                ⚡ <strong id="resultKwh">–</strong> kWh per year
+            </li>
+            <li class="list-group-item">
+                🌍 <strong id="resultCo2">–</strong> kg CO₂
+            </li>
+            <li class="list-group-item">
+                💸 <strong id="resultCost">–</strong> NOK per year
+            </li>
+        </ul>
+    </div>
+</div>

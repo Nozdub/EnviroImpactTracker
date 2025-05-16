@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35327.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnviroImpactFrontend", "EnviroImpactFrontend\EnviroImpactFrontend.csproj", "{DD9BC34F-C19D-42B0-9E47-7091D2EC3671}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DD9BC34F-C19D-42B0-9E47-7091D2EC3671}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD9BC34F-C19D-42B0-9E47-7091D2EC3671}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD9BC34F-C19D-42B0-9E47-7091D2EC3671}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD9BC34F-C19D-42B0-9E47-7091D2EC3671}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6A42B206-7775-4D1B-9854-C3CACECB0E29}
+	EndGlobalSection
+EndGlobal
