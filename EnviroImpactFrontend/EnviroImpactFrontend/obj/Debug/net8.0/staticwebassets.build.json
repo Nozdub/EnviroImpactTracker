@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "YKeEdP+M/Ijd706DAyePqd7OtCxyEmjju6LLkSob5iM=",
+  "Hash": "MTWfclfIfZKfY9Uwo4w2/DjrH01H4g66qwyaDKh1QzY=",
   "Source": "EnviroImpactFrontend",
   "BasePath": "_content/EnviroImpactFrontend",
   "Mode": "Default",
@@ -91,6 +91,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\favicon.ico"
+    },
+    {
+      "Identity": "E:\\python projects\\EnviroImpactTracker\\EnviroImpactFrontend\\EnviroImpactFrontend\\wwwroot\\js\\calculate.js",
+      "SourceId": "EnviroImpactFrontend",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\python projects\\EnviroImpactTracker\\EnviroImpactFrontend\\EnviroImpactFrontend\\wwwroot\\",
+      "BasePath": "_content/EnviroImpactFrontend",
+      "RelativePath": "js/calculate.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\calculate.js"
     },
     {
       "Identity": "E:\\python projects\\EnviroImpactTracker\\EnviroImpactFrontend\\EnviroImpactFrontend\\wwwroot\\js\\site.js",
