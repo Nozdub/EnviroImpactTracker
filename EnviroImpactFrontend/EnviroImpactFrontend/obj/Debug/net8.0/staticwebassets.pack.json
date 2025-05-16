@@ -13,6 +13,10 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "E:\\python projects\\EnviroImpactTracker\\EnviroImpactFrontend\\EnviroImpactFrontend\\wwwroot\\js\\calculate.js",
+      "PackagePath": "staticwebassets\\js\\calculate.js"
+    },
+    {
       "Id": "E:\\python projects\\EnviroImpactTracker\\EnviroImpactFrontend\\EnviroImpactFrontend\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
     },
