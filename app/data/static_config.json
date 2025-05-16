@@ -1,4 +1,11 @@
 {
+  "emission_factors": {
+    "default": 0.017
+  },
+
+  "pricing": {
+    "default_nok_per_kwh": 1.20
+  },
   "valid_locations": [
     "Oslo", "Trondheim", "Bergen", "Tromsø", "Stavanger"
   ],
