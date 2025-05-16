@@ -4,102 +4,109 @@
     ViewData["Title"] = "Calculate";
 }
 
-<div class="row">
-    <!-- Input Panel -->
-    <div class="col-md-6">
-        <h2>Calculate Your Impact</h2>
-        <p>Fill out the form to estimate electricity usage, emissions and cost.</p>
+<div class="container-fluid px-5">
+    <div class="d-flex flex-row align-items-start mt-5 position-relative" style="min-height: 600px;">
+        <!-- Input Panel as a card -->
+        <div class="card shadow p-4" style="background-color: #f2f2f2; width: 450px; z-index: 2;">
+            <h3 class="fw-bold">Calculate your impact</h3>
+            <p class="text-muted small">Description text on how to use the form, simple mode and advanced mode.</p>
 
-        <form id="impactForm">
-            <div class="mb-3">
-                <label for="location" class="form-label">Location</label>
-                <select id="location" class="form-select">
-                    <option value="">-- Select Location --</option>
-                    <option>Oslo</option>
-                    <option>Bergen</option>
-                    <option>Trondheim</option>
-                    <option>Tromsø</option>
-                    <option>Stavanger</option>
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label for="facilityType" class="form-label">Facility Type</label>
-                <select id="facilityType" class="form-select">
-                    <option value="">-- Select Facility type --</option>
-                    <option>data_center</option>
-                    <option>factory</option>
-                    <option>hospital</option>
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label for="size" class="form-label">Size</label>
-                <select id="size" class="form-select">
-                    <option value="">-- Select Size --</option>
-                    <option>small</option>
-                    <option>medium</option>
-                    <option>large</option>
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label for="machineCount" class="form-label">Machine Count</label>
-                <input type="number" class="form-control" id="machineCount" />
-            </div>
-
-            <div class="mb-3">
-                <label for="usagePattern" class="form-label">Usage Pattern</label>
-                <select id="usagePattern" class="form-select">
-                    <option value="">-- Select Usage Pattern --</option>
-                    <option>constant</option>
-                    <option>peak</option>
-                    <option>intermittent</option>
-                </select>
-            </div>
-
-            <!-- Advanced Options Toggle -->
-            <div class="form-check form-switch mb-3">
-                <input class="form-check-input" type="checkbox" id="advancedToggle">
-                <label class="form-check-label" for="advancedToggle">Advanced Options</label>
-            </div>
-
-            <!-- Advanced Inputs (hidden by default) -->
-            <div id="advancedFields" style="display:none;">
+            <form id="impactForm">
                 <div class="mb-3">
-                    <label for="customKwh" class="form-label">Custom kWh</label>
-                    <input type="number" class="form-control" id="customKwh" />
+                    <label for="location" class="form-label">1. Location</label>
+                    <select id="location" class="form-select">
+                        <option value="">-- Select Location --</option>
+                        <option>Oslo</option>
+                        <option>Bergen</option>
+                        <option>Trondheim</option>
+                        <option>Tromsø</option>
+                        <option>Stavanger</option>
+                    </select>
                 </div>
+
                 <div class="mb-3">
-                    <label for="customEmission" class="form-label">Custom CO₂ Factor (kg/kWh)</label>
-                    <input type="number" class="form-control" id="customEmission" step="0.0001" />
+                    <label for="facilityType" class="form-label">2. Facility Type</label>
+                    <select id="facilityType" class="form-select">
+                        <option value="">-- Select Facility type --</option>
+                        <option>data_center</option>
+                        <option>factory</option>
+                        <option>hospital</option>
+                    </select>
                 </div>
+
                 <div class="mb-3">
-                    <label for="customPrice" class="form-label">Custom Price (NOK/kWh)</label>
-                    <input type="number" class="form-control" id="customPrice" step="0.01" />
+                    <label for="size" class="form-label">3. Facility Size</label>
+                    <select id="size" class="form-select">
+                        <option value="">-- Select Size --</option>
+                        <option>small</option>
+                        <option>medium</option>
+                        <option>large</option>
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="machineCount" class="form-label">4. Machine Count</label>
+                    <input type="number" class="form-control" id="machineCount" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="usagePattern" class="form-label">5. Usage Pattern</label>
+                    <select id="usagePattern" class="form-select">
+                        <option value="">-- Select Usage Pattern --</option>
+                        <option>constant</option>
+                        <option>peak</option>
+                        <option>intermittent</option>
+                    </select>
+                </div>
+
+                <!-- Simple/Advanced toggle -->
+                <p class="text-center mt-3 small text-muted">
+                    <span id="simpleLabel" class="text-primary text-decoration-underline" role="button">Simple</span> |
+                    <span id="advancedLabel" class="text-muted text-decoration-underline" role="button">Advanced</span>
+                </p>
+
+                <!-- Advanced Inputs (hidden by default) -->
+                <div id="advancedFields" style="display:none;">
+                    <div class="mb-3">
+                        <label for="customKwh" class="form-label">Custom kWh</label>
+                        <input type="number" class="form-control" id="customKwh" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="customEmission" class="form-label">Custom CO₂ Factor (kg/kWh)</label>
+                        <input type="number" class="form-control" id="customEmission" step="0.0001" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="customPrice" class="form-label">Custom Price (NOK/kWh)</label>
+                        <input type="number" class="form-control" id="customPrice" step="0.01" />
+                    </div>
+                </div>
+
+                <div class="d-grid mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg">Calculate</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Output Panel -->
+        <div id="resultPanel" class="d-flex align-items-center" style="height: 70%;">
+            <div class="card result-card inactive" id="resultCard">
+                <h2 class="fw-bold">Facility Results</h2>
+                <div class="mt-4">
+                    <h5>Usage per year</h5>
+                    <p class="display-6 text-success"><strong id="resultKwh">–</strong> kWh/year</p>
+                    <p class="text-muted small">Calculated based on location, machine count, size, and usage pattern.</p>
+                </div>
+                <div class="mt-4">
+                    <h5>Emissions per year</h5>
+                    <p class="display-6 text-info"><strong id="resultCo2">–</strong> kg CO₂</p>
+                    <p class="text-muted small">Based on energy use and emission factor for your region.</p>
+                </div>
+                <div class="mt-4">
+                    <h5>Cost per year</h5>
+                    <p class="display-6 text-warning"><strong id="resultCost">–</strong> NOK/year</p>
+                    <p class="text-muted small">Calculated using current or custom energy prices.</p>
                 </div>
             </div>
-
-            <div class="d-grid mt-4">
-                <button type="submit" class="btn btn-primary btn-lg">Calculate</button>
-            </div>
-        </form>
-    </div>
-
-    <!-- Output Panel -->
-    <div class="col-md-6" id="resultPanel" style="display:none;">
-        <h2>Facility Results</h2>
-        <p class="lead">Your facility is expected to:</p>
-        <ul class="list-group">
-            <li class="list-group-item">
-                ⚡ <strong id="resultKwh">–</strong> kWh per year
-            </li>
-            <li class="list-group-item">
-                🌍 <strong id="resultCo2">–</strong> kg CO₂
-            </li>
-            <li class="list-group-item">
-                💸 <strong id="resultCost">–</strong> NOK per year
-            </li>
-        </ul>
+        </div>
     </div>
 </div>
