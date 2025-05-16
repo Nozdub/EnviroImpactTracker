@@ -19,3 +19,11 @@ venv/
 
 # Environment variables
 .env
+
+# Ignore Visual Studio cache and project build folders
+.vs/
+EnviroImpactFrontend/bin/
+EnviroImpactFrontend/obj/
+
+*.user
+*.suo
