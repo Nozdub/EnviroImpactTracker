@@ -1,6 +1,8 @@
 from fastapi import APIRouter, HTTPException
 from app.models.calculation_input import CalculationInput
 from app.services.config_loader import load_static_config
+import asyncio
+from app.services.electricity_price_api import fetch_average_price
 
 router = APIRouter()
 
@@ -8,6 +10,9 @@ router = APIRouter()
 @router.post("/calculate")
 def calculate(input_data: CalculationInput):
     config = load_static_config()
+
+    baseline = None
+    multiplier = None
 
     # Check region
     if input_data.region not in config["regions"]:
@@ -22,54 +27,86 @@ def calculate(input_data: CalculationInput):
     if input_data.size not in facility_data["size_multipliers"]:
         raise HTTPException(status_code=400, detail=f"Invalid size: {input_data.size}")
 
-    # Base calculations
-
     # Determine baseline kWh
     if input_data.custom_kwh is not None:
         estimated_kwh = float(input_data.custom_kwh)
+        print(f"[DEBUG] Using custom kWh: {estimated_kwh}")
     else:
         baseline = facility_data["baseline_kwh"]
         multiplier = facility_data["size_multipliers"][input_data.size]
         estimated_kwh = baseline * multiplier
+        print(f"[DEBUG] Using baseline kWh: {baseline}")
+        print(f"[DEBUG] Size multiplier: {multiplier}")
+        print(f"[DEBUG] Estimated kWh (baseline × multiplier): {estimated_kwh}")
 
-        # Emission calculation
-        emission_factor = input_data.custom_emission_factor or config["emission_factors"]["default"]
-        estimated_co2_kg = estimated_kwh * emission_factor
+    # Emission calculation
+    emission_factor = input_data.custom_emission_factor or config["emission_factors"]["default"]
+    estimated_co2_kg = estimated_kwh * emission_factor
+    print(f"[DEBUG] Emission factor used: {emission_factor}")
+    print(f"[DEBUG] Estimated CO₂ (kWh × factor): {estimated_co2_kg}")
 
-        # Determine industry class and price modifier
-        industry_class = facility_data.get("industry_class", "household")
-        industry_modifier = config["industry_classes"].get(industry_class, 1.0)
+    # Determine industry class and price modifier
+    industry_class = facility_data.get("industry_class", "household")
+    industry_modifier = config["industry_classes"].get(industry_class, 1.0)
+    print(f"[DEBUG] Industry class: {industry_class}")
+    print(f"[DEBUG] Industry modifier: {industry_modifier}")
 
-        # Get power grid region and base price
-        power_region = config["power_grid_regions"].get(input_data.region)
-        if not power_region:
-            raise HTTPException(status_code=400, detail=f"Region '{input_data.region}' has no power grid mapping.")
+    # Get power grid region
+    power_region = config["power_grid_regions"].get(input_data.region)
+    if not power_region:
+        raise HTTPException(status_code=400, detail=f"Region '{input_data.region}' has no power grid mapping.")
 
-        # Placeholder: Fetch dynamic price here in future implementation
-        base_price = config["pricing"].get("default_nok_per_kwh", 1.20)
+    # Determine price per kWh
+    if input_data.custom_price_per_kwh is not None:
+        effective_price = input_data.custom_price_per_kwh
+        price_source = "custom"
+        print(f"[DEBUG] Using custom price per kWh: {effective_price}")
+    else:
+        try:
+            base_price = asyncio.run(fetch_average_price(power_region))
+            effective_price = base_price * industry_modifier
+            price_source = "api"
+            print(f"[DEBUG] Base price from API (NOx): {base_price}")
+        except Exception:
+            base_price = config["pricing"].get("default_nok_per_kwh", 1.20)
+            effective_price = base_price * industry_modifier
+            price_source = "default"
+            print(f"[DEBUG] Fallback base price: {base_price}")
 
-        # Override with user input if given
-        effective_price = input_data.custom_price_per_kwh or (base_price * industry_modifier)
-        estimated_cost_nok = estimated_kwh * effective_price
+        print(f"[DEBUG] Effective price after modifier: {effective_price} (source: {price_source})")
 
-        return {
-            "status": "valid",
-            "estimated_kwh": round(estimated_kwh, 2),
-            "estimated_co2_kg": round(estimated_co2_kg, 2),
-            "estimated_cost_nok": round(estimated_cost_nok, 2),
-            "metadata": {
-                "region": input_data.region,
-                "power_grid_region": power_region,
-                "industry_class": industry_class,
-                "industry_modifier": industry_modifier,
-                "price_per_kwh": round(effective_price, 3),
-                "emission_factor_used": emission_factor
-            },
-            "received": input_data.model_dump()
-        }
+    estimated_cost_nok = estimated_kwh * effective_price
+    print(f"[DEBUG] Total estimated cost (kWh × price): {estimated_cost_nok}")
+    print("------------------------------------------------------------")
+
+    return {
+        "status": "valid",
+        "estimated_kwh": round(estimated_kwh, 2),
+        "estimated_co2_kg": round(estimated_co2_kg, 2),
+        "estimated_cost_nok": round(estimated_cost_nok, 2),
+        "metadata": {
+            "region": input_data.region,
+            "power_grid_region": power_region,
+            "industry_class": industry_class,
+            "industry_modifier": industry_modifier,
+            "price_per_kwh": round(effective_price, 3),
+            "price_source": price_source,
+            "emission_factor_used": emission_factor,
+            **({"estimated_baseline_kwh": baseline} if baseline is not None else {}),
+            **({"size_multiplier": multiplier} if multiplier is not None else {}),
+
+        },
+        "received": input_data.model_dump()
+    }
 
 
 @router.get("/regions")
 def get_regions():
     config = load_static_config()
     return {"regions": config["regions"]}
+
+
+@router.get("/facility-types")
+def get_facility_types():
+    config = load_static_config()
+    return {"facility_types": list(config["facility_types"].keys())}
