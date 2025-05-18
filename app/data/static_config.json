@@ -6,23 +6,23 @@
   ],
 
   "power_grid_regions": {
-    "Nordland": "NO1",
-    "Troms": "NO1",
-    "Finnmark": "NO1",
+    "Nordland": "NO4",
+    "Troms": "NO4",
+    "Finnmark": "NO4",
     "Agder": "NO2",
     "Telemark": "NO2",
     "Vestfold": "NO2",
     "Buskerud": "NO2",
     "Trøndelag": "NO3",
     "Møre og Romsdal": "NO3",
-    "Hordaland": "NO4",
-    "Sogn og Fjordane": "NO4",
-    "Rogaland": "NO4",
-    "Oslo": "NO5",
-    "Akershus": "NO5",
-    "Østfold": "NO5",
-    "Hedmark": "NO5",
-    "Oppland": "NO5"
+    "Hordaland": "NO5",
+    "Sogn og Fjordane": "NO5",
+    "Rogaland": "NO2",
+    "Oslo": "NO1",
+    "Akershus": "NO1",
+    "Østfold": "NO1",
+    "Hedmark": "NO1",
+    "Oppland": "NO1"
 
   },
 
