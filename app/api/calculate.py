@@ -3,6 +3,7 @@ from app.models.calculation_input import CalculationInput
 from app.services.config_loader import load_static_config
 import asyncio
 from app.services.electricity_price_api import fetch_average_price
+from app.services.benchmark_loader import load_benchmark_data
 
 router = APIRouter()
 
@@ -10,6 +11,7 @@ router = APIRouter()
 @router.post("/calculate")
 def calculate(input_data: CalculationInput):
     config = load_static_config()
+    benchmark = load_benchmark_data()
 
     baseline = None
     multiplier = None
@@ -44,6 +46,20 @@ def calculate(input_data: CalculationInput):
     estimated_co2_kg = estimated_kwh * emission_factor
     print(f"[DEBUG] Emission factor used: {emission_factor}")
     print(f"[DEBUG] Estimated CO₂ (kWh × factor): {estimated_co2_kg}")
+
+    # Benchmark comparison
+    bench_kwh = None
+    percent_above_benchmark = None
+
+    bench_entry = benchmark.get(input_data.facility_type, {}).get(input_data.size)
+    if bench_entry:
+        bench_kwh = bench_entry.get("benchmark_kwh")
+        if bench_kwh:
+            percent_above_benchmark = ((estimated_kwh - bench_kwh) / bench_kwh) * 100
+            print(f"[DEBUG] Benchmark kWh: {bench_kwh}")
+            print(f"[DEBUG] Your usuage is {percent_above_benchmark:.2f}% compared to benchmark.")
+    else:
+        print(f"[DEBUG] No benchmark data available for {input_data.facility_type} ({input_data.size})")
 
     # Determine industry class and price modifier
     industry_class = facility_data.get("industry_class", "household")
@@ -94,6 +110,10 @@ def calculate(input_data: CalculationInput):
             "emission_factor_used": emission_factor,
             **({"estimated_baseline_kwh": baseline} if baseline is not None else {}),
             **({"size_multiplier": multiplier} if multiplier is not None else {}),
+            "benchmark": {
+                "benchmark_kwh": bench_kwh,
+                "percent_above_benchmark": round(percent_above_benchmark, 2) if percent_above_benchmark is not None else None
+        }
 
         },
         "received": input_data.model_dump()
