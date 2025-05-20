@@ -41,6 +41,8 @@ def calculate(input_data: CalculationInput):
         print(f"[DEBUG] Size multiplier: {multiplier}")
         print(f"[DEBUG] Estimated kWh (baseline × multiplier): {estimated_kwh}")
 
+
+
     # Emission calculation
     emission_factor = input_data.custom_emission_factor or config["emission_factors"]["default"]
     estimated_co2_kg = estimated_kwh * emission_factor
@@ -53,7 +55,7 @@ def calculate(input_data: CalculationInput):
 
     bench_entry = benchmark.get(input_data.facility_type, {}).get(input_data.size)
     if bench_entry:
-        bench_kwh = bench_entry.get("benchmark_kwh")
+        bench_kwh = bench_entry.get("kwh")
         if bench_kwh:
             percent_above_benchmark = ((estimated_kwh - bench_kwh) / bench_kwh) * 100
             print(f"[DEBUG] Benchmark kWh: {bench_kwh}")
