@@ -42,7 +42,6 @@ def calculate(input_data: CalculationInput):
         print(f"[DEBUG] Estimated kWh (baseline × multiplier): {estimated_kwh}")
 
 
-
     # Emission calculation
     emission_factor = input_data.custom_emission_factor or config["emission_factors"]["default"]
     estimated_co2_kg = estimated_kwh * emission_factor
