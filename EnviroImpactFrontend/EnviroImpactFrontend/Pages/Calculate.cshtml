@@ -111,13 +111,21 @@
             <div class="card result-card inactive" id="resultCard">
                 <h2 class="fw-bold">Facility Results</h2>
 
-                <div class="mt-4">
-                    <h5>
-                        Usage per year
-                        <i id="usageInfo" class="bi bi-info-circle ms-2 text-secondary" data-bs-toggle="tooltip" title=""></i>
-                    </h5>
-                    <p class="display-6 text-success"><strong id="resultKwh">–</strong> kWh/year</p>
-                    <p class="text-muted small">Calculated based on location, machine count, size, and usage pattern.</p>
+                <div class="mt-4 d-flex align-items-start justify-content-between">
+                    <!-- Left: Textual info -->
+                    <div style="width: 60%;">
+                        <h5>
+                            Usage per year
+                            <i id="usageInfo" class="bi bi-info-circle ms-2 text-secondary" data-bs-toggle="tooltip" title=""></i>
+                        </h5>
+                        <p class="display-6 text-success"><strong id="resultKwh">–</strong> kWh/year</p>
+                        <p class="text-muted small">Calculated based on location, machine count, size, and usage pattern.</p>
+                    </div>
+
+                    <!-- Right: Benchmark chart -->
+                    <div style="width: 40%;">
+                        <canvas id="benchmarkChart" width="300" height="200" style="max-width: 100%; margin-top: 10px;"></canvas>
+                    </div>
                 </div>
 
                 <div class="mt-4">
@@ -138,12 +146,7 @@
                     <p class="text-muted small">Calculated using current or custom energy prices.</p>
                 </div>
 
-                <!-- 🆕 Benchmark info -->
-                <div class="mt-4">
-                    <h5>Benchmark Comparison</h5>
-                    <p class="text-muted" id="benchmarkComparison">–</p>
-                </div>
-            </div>
+              </div>
         </div>
 
     </div>
