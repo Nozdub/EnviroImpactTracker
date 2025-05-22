@@ -48,17 +48,11 @@
                     </select>
                 </div>
 
-                <div class="mb-3">
-                    <label for="machineCount" class="form-label">
-                        4. Machine Count
-                        <i class="bi bi-info-circle ms-1" data-bs-toggle="tooltip" title="How many machines or devices are typically running in the facility?"></i>
-                    </label>
-                    <input type="number" class="form-control" id="machineCount" />
-                </div>
+              
 
                 <div class="mb-3">
                     <label for="usagePattern" class="form-label">
-                        5. Usage Pattern
+                        4. Usage Pattern
                         <i class="bi bi-info-circle ms-1" data-bs-toggle="tooltip" title="Choose how the facility typically uses electricity — steadily, with peaks, or irregularly."></i>
                     </label>
                     <select id="usagePattern" class="form-select">
@@ -107,44 +101,48 @@
         </div>
 
         <!-- Output Panel -->
-        <div id="resultPanel" class="d-flex align-items-center" style="height: 70%;">
-            <div class="card result-card inactive" id="resultCard">
+        <div id="resultPanel" class="d-flex align-items-center";">
+            <div class="card result-card inactive" id="resultCard" style="width: 2000px;">
                 <h2 class="fw-bold">Facility Results</h2>
 
-                <div class="mt-4 d-flex align-items-start justify-content-between">
-                    <!-- Left: Textual info -->
-                    <div style="width: 60%;">
+                <!-- Top row: Values -->
+                <div class="row">
+                    <div class="col">
                         <h5>
                             Usage per year
                             <i id="usageInfo" class="bi bi-info-circle ms-2 text-secondary" data-bs-toggle="tooltip" title=""></i>
                         </h5>
                         <p class="display-6 text-success"><strong id="resultKwh">–</strong> kWh/year</p>
-                        <p class="text-muted small">Calculated based on location, machine count, size, and usage pattern.</p>
                     </div>
-
-                    <!-- Right: Benchmark chart -->
-                    <div style="width: 40%;">
-                        <canvas id="benchmarkChart" width="300" height="200" style="max-width: 100%; margin-top: 10px;"></canvas>
+                    <div class="col">
+                        <h5>
+                            Emissions per year
+                            <i id="emissionsInfo" class="bi bi-info-circle ms-2 text-secondary" data-bs-toggle="tooltip" title=""></i>
+                        </h5>
+                        <p class="display-6 text-info"><strong id="resultCo2">–</strong> kg CO₂</p>
+                    </div>
+                    <div class="col">
+                        <h5>
+                            Cost per year
+                            <i id="costPerYearInfo" class="bi bi-info-circle ms-2 text-secondary" data-bs-toggle="tooltip" title=""></i>
+                        </h5>
+                        <p class="display-6 text-warning"><strong id="resultCost">–</strong> NOK/year</p>
                     </div>
                 </div>
 
-                <div class="mt-4">
-                    <h5>
-                        Emissions per year
-                        <i id="emissionsInfo" class="bi bi-info-circle ms-2 text-secondary" data-bs-toggle="tooltip" title=""></i>
-                    </h5>
-                    <p class="display-6 text-info"><strong id="resultCo2">–</strong> kg CO₂</p>
-                    <p class="text-muted small">Based on energy use and emission factor for your region.</p>
+                <!-- Bottom row: Charts -->
+                <div class="row mt-4">
+                    <div class="col">
+                        <canvas id="benchmarkChart" width="300" height="180" style="max-width: 100%;"></canvas>
+                    </div>
+                    <div class="col">
+                        <canvas id="co2Chart" width="300" height="180" style="max-width: 100%;"></canvas>
+                    </div>
+                    <div class="col">
+                        <canvas id="costChart" width="300" height="180" style="max-width: 100%;"></canvas>
+                    </div>
                 </div>
 
-                <div class="mt-4">
-                    <h5>
-                        Cost per year
-                        <i id="costPerYearInfo" class="bi bi-info-circle ms-2 text-secondary" data-bs-toggle="tooltip" title=""></i>
-                    </h5>
-                    <p class="display-6 text-warning"><strong id="resultCost">–</strong> NOK/year</p>
-                    <p class="text-muted small">Calculated using current or custom energy prices.</p>
-                </div>
 
               </div>
         </div>

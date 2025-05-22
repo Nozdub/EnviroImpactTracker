@@ -62,6 +62,9 @@ def calculate(input_data: CalculationInput):
     else:
         print(f"[DEBUG] No benchmark data available for {input_data.facility_type} ({input_data.size})")
 
+
+
+
     # Determine industry class and price modifier
     industry_class = facility_data.get("industry_class", "household")
     industry_modifier = config["industry_classes"].get(industry_class, 1.0)
@@ -96,6 +99,12 @@ def calculate(input_data: CalculationInput):
     print(f"[DEBUG] Total estimated cost (kWh × price): {estimated_cost_nok}")
     print("------------------------------------------------------------")
 
+    bench_co2 = bench_entry.get("co2") if bench_entry else None
+    co2_percent = ((estimated_co2_kg - bench_co2) / bench_co2) * 100 if bench_co2 else None
+
+    bench_cost = bench_entry.get("cost") if bench_entry else None
+    cost_percent = ((estimated_cost_nok - bench_cost) / bench_cost) * 100 if bench_cost else None
+
     return {
         "status": "valid",
         "estimated_kwh": round(estimated_kwh, 2),
@@ -113,8 +122,12 @@ def calculate(input_data: CalculationInput):
             **({"size_multiplier": multiplier} if multiplier is not None else {}),
             "benchmark": {
                 "benchmark_kwh": bench_kwh,
-                "percent_above_benchmark": round(percent_above_benchmark, 2) if percent_above_benchmark is not None else None
-        }
+                "percent_above_benchmark": round(percent_above_benchmark, 2) if percent_above_benchmark is not None else None,
+                "benchmark_co2": bench_co2,
+                "percent_above_co2": round(co2_percent, 2) if co2_percent is not None else None,
+                "benchmark_cost": bench_cost,
+                "percent_above_cost": round(cost_percent, 2) if cost_percent is not None else None
+            }
 
         },
         "received": input_data.model_dump()
