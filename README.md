@@ -18,7 +18,6 @@
 - **Pydantic** – request model validation
 - **Uvicorn** – ASGI web server
 - **Starlette** – middleware and routing foundation
-- **Python 3.12**
 
 ### Frontend
 - **ASP.NET Core Razor Pages**
