@@ -4,6 +4,7 @@ from app.services.config_loader import load_static_config
 import asyncio
 from app.services.electricity_price_api import fetch_average_price
 from app.services.benchmark_loader import load_benchmark_data
+from app.services.emission_api import fetch_emission_factor
 
 router = APIRouter()
 
@@ -43,7 +44,18 @@ def calculate(input_data: CalculationInput):
 
 
     # Emission calculation
-    emission_factor = input_data.custom_emission_factor or config["emission_factors"]["default"]
+    if input_data.custom_emission_factor is not None:
+        emission_factor = input_data.custom_emission_factor
+        print(f"[DEBUG] Using custom emission factor: {emission_factor}")
+    else:
+        try:
+            emission_factor, emission_timestamp = asyncio.run(fetch_emission_factor())
+            print(f"[DEBUG] Using API emission factor: {emission_factor} at {emission_timestamp}")
+        except Exception:
+            emission_factor = config["emission_factors"]["default"]
+            emission_timestamp = None
+            print(f"[DEBUG] Fallback emission factor from config: {emission_factor}")
+
     estimated_co2_kg = estimated_kwh * emission_factor
     print(f"[DEBUG] Emission factor used: {emission_factor}")
     print(f"[DEBUG] Estimated CO₂ (kWh × factor): {estimated_co2_kg}")
@@ -118,6 +130,8 @@ def calculate(input_data: CalculationInput):
             "price_per_kwh": round(effective_price, 3),
             "price_source": price_source,
             "emission_factor_used": emission_factor,
+            "emission_factor_timestamp": emission_timestamp,
+
             **({"estimated_baseline_kwh": baseline} if baseline is not None else {}),
             **({"size_multiplier": multiplier} if multiplier is not None else {}),
             "benchmark": {
