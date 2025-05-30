@@ -78,6 +78,14 @@ body {
     border-bottom-left-radius: 0;
 }
 
+    .result-card .row .col + .col {
+        border-left: 3px solid white;
+        padding-left: 20px;
+    }
+
+
+
+
 /* HIDDEN STATE */
 .inactive {
     left: -100%;
