@@ -48,8 +48,6 @@
                     </select>
                 </div>
 
-              
-
                 <div class="mb-3">
                     <label for="usagePattern" class="form-label">
                         4. Usage Pattern
@@ -101,56 +99,59 @@
         </div>
 
         <!-- Output Panel -->
-        <div id="resultPanel" class="d-flex align-items-center";">
-            <div class="card result-card inactive" id="resultCard";">
+        <div id="resultPanel" class="d-flex align-items-center">
+            <div class="card result-card inactive" id="resultCard">
                 <h2 class="fw-bold">Facility Results</h2>
 
-                <!-- Top row: Values -->
-                <div class="row">
-                    <div class="col">
-                        <h5>
-                            Usage per year
-                            <i id="usageInfo" class="bi bi-info-circle ms-2 text-secondary" data-bs-toggle="tooltip" title=""></i>
-                        </h5>
-                        <p class="display-6 text-success"><strong id="resultKwh">–</strong> kWh</p>
-                        <p class="small text-muted">Total estimated energy use for your facility, based on selected region, size, and usage pattern.</p>
-
+                <!-- Combined row: Values + Charts -->
+                <div class="row align-items-stretch">
+                    <!-- Usage -->
+                    <div class="col d-flex flex-column justify-content-between">
+                        <div>
+                            <h5>
+                                Usage per year
+                                <i id="usageInfo" class="bi bi-info-circle ms-2 text-secondary" data-bs-toggle="tooltip" title=""></i>
+                            </h5>
+                            <p class="display-6 text-success"><strong id="resultKwh">–</strong> kWh</p>
+                            <p class="small text-muted">Total estimated energy use for your facility, based on selected region, size, and usage pattern.</p>
+                        </div>
+                        <div class="mt-3">
+                            <canvas id="benchmarkChart" width="300" height="180" style="max-width: 100%;"></canvas>
+                        </div>
                     </div>
-                    <div class="col">
-                        <h5>
-                            Emissions per year
-                            <i id="emissionsInfo" class="bi bi-info-circle ms-2 text-secondary" data-bs-toggle="tooltip" title=""></i>
-                        </h5>
-                        <p class="display-6 text-info"><strong id="resultCo2">–</strong> kg CO₂</p>
-                        <p class="small text-muted">Estimated annual CO₂ emissions, calculated from your facility’s energy use and local emission factors.</p>
 
+                    <!-- Emissions -->
+                    <div class="col d-flex flex-column justify-content-between">
+                        <div>
+                            <h5>
+                                Emissions per year
+                                <i id="emissionsInfo" class="bi bi-info-circle ms-2 text-secondary" data-bs-toggle="tooltip" title=""></i>
+                            </h5>
+                            <p class="display-6 text-info"><strong id="resultCo2">–</strong> kg CO₂</p>
+                            <p class="small text-muted">Estimated annual CO₂ emissions, calculated from your facility’s energy use and local emission factors.</p>
+                        </div>
+                        <div class="mt-3">
+                            <canvas id="co2Chart" width="300" height="180" style="max-width: 100%;"></canvas>
+                        </div>
                     </div>
-                    <div class="col">
-                        <h5>
-                            Cost per year
-                            <i id="costPerYearInfo" class="bi bi-info-circle ms-2 text-secondary" data-bs-toggle="tooltip" title=""></i>
-                        </h5>
-                        <p class="display-6 text-warning"><strong id="resultCost">–</strong> NOK</p>
-                        <p class="small text-muted">Estimated annual energy cost based on current electricity prices and selected facility characteristics.</p>
 
+                    <!-- Cost -->
+                    <div class="col d-flex flex-column justify-content-between">
+                        <div>
+                            <h5>
+                                Cost per year
+                                <i id="costPerYearInfo" class="bi bi-info-circle ms-2 text-secondary" data-bs-toggle="tooltip" title=""></i>
+                            </h5>
+                            <p class="display-6 text-warning"><strong id="resultCost">–</strong> NOK</p>
+                            <p class="small text-muted">Estimated annual energy cost based on current electricity prices and selected facility characteristics.</p>
+                        </div>
+                        <div class="mt-3">
+                            <canvas id="costChart" width="300" height="180" style="max-width: 100%;"></canvas>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Bottom row: Charts -->
-                <div class="row mt-4">
-                    <div class="col">
-                        <canvas id="benchmarkChart" width="300" height="180" style="max-width: 100%;"></canvas>
-                    </div>
-                    <div class="col">
-                        <canvas id="co2Chart" width="300" height="180" style="max-width: 100%;"></canvas>
-                    </div>
-                    <div class="col">
-                        <canvas id="costChart" width="300" height="180" style="max-width: 100%;"></canvas>
-                    </div>
-                </div>
-
-
-              </div>
+            </div>
         </div>
 
     </div>
