@@ -4,10 +4,10 @@
     ViewData["Title"] = "Calculate";
 }
 
-<div class="container-fluid px-5">
-    <div class="d-flex flex-row align-items-start mt-5 position-relative" style="min-height: 600px;">
+<div class="main-content">
+    <div class="calculate-row">
         <!-- Input Panel as a card -->
-        <div class="card shadow p-4" style="background-color: #f2f2f2; width: 450px; z-index: 2;">
+        <div class="card shadow p-4" style="background-color: #f2f2f2; width: 400px; z-index: 2;">
             <h3 class="fw-bold">Calculate your impact</h3>
             <p class="text-muted small">Estimate your energy use, emissions, and cost — advanced inputs are optional.</p>
 
@@ -102,7 +102,7 @@
 
         <!-- Output Panel -->
         <div id="resultPanel" class="d-flex align-items-center";">
-            <div class="card result-card inactive" id="resultCard" style="width: 2000px;">
+            <div class="card result-card inactive" id="resultCard";">
                 <h2 class="fw-bold">Facility Results</h2>
 
                 <!-- Top row: Values -->
@@ -112,7 +112,9 @@
                             Usage per year
                             <i id="usageInfo" class="bi bi-info-circle ms-2 text-secondary" data-bs-toggle="tooltip" title=""></i>
                         </h5>
-                        <p class="display-6 text-success"><strong id="resultKwh">–</strong> kWh/year</p>
+                        <p class="display-6 text-success"><strong id="resultKwh">–</strong> kWh</p>
+                        <p class="small text-muted">Total estimated energy use for your facility, based on selected region, size, and usage pattern.</p>
+
                     </div>
                     <div class="col">
                         <h5>
@@ -120,13 +122,17 @@
                             <i id="emissionsInfo" class="bi bi-info-circle ms-2 text-secondary" data-bs-toggle="tooltip" title=""></i>
                         </h5>
                         <p class="display-6 text-info"><strong id="resultCo2">–</strong> kg CO₂</p>
+                        <p class="small text-muted">Estimated annual CO₂ emissions, calculated from your facility’s energy use and local emission factors.</p>
+
                     </div>
                     <div class="col">
                         <h5>
                             Cost per year
                             <i id="costPerYearInfo" class="bi bi-info-circle ms-2 text-secondary" data-bs-toggle="tooltip" title=""></i>
                         </h5>
-                        <p class="display-6 text-warning"><strong id="resultCost">–</strong> NOK/year</p>
+                        <p class="display-6 text-warning"><strong id="resultCost">–</strong> NOK</p>
+                        <p class="small text-muted">Estimated annual energy cost based on current electricity prices and selected facility characteristics.</p>
+
                     </div>
                 </div>
 
