@@ -42,86 +42,85 @@
 
   "facility_types": {
   "data_center": {
-    "baseline_kwh": 2500000,
+    "baseline_kwh": 6451520,
     "size_multipliers": {
-      "small": 0.75,
-      "medium": 1.0,
-      "large": 1.25
+        "small": 0.6,
+        "medium": 1.0,
+        "large": 1.5
+    },
+    "power_region_multipliers": {
+        "NO1": 1.25,
+        "NO2": 1.1,
+        "NO3": 0.7,
+        "NO4": 0.75,
+        "NO5": 0.9
     },
     "industry_class": "high_intensity"
-  },
+},
   "factory": {
-    "baseline_kwh": 750000,
+    "baseline_kwh": 8014563,
     "size_multipliers": {
-      "small": 0.85,
+      "small": 0.6,
       "medium": 1.0,
-      "large": 1.2
+      "large": 1.5
     },
     "industry_class": "high_intensity"
   },
   "hospital": {
-    "baseline_kwh": 500000,
+    "baseline_kwh": 38095238.1,
     "size_multipliers": {
-      "small": 0.9,
-      "medium": 1.0,
-      "large": 1.1
+        "small": 0.5,
+        "medium": 1.0,
+        "large": 1.5
     },
     "industry_class": "low_intensity"
-  },
+},
   "office_building": {
-    "baseline_kwh": 200000,
+    "baseline_kwh": 155400,
     "size_multipliers": {
-      "small": 0.8,
-      "medium": 1.0,
-      "large": 1.2
+        "small": 0.7,
+        "medium": 1.0,
+        "large": 1.5
     },
     "industry_class": "low_intensity"
-  },
+},
   "retail_store": {
-    "baseline_kwh": 150000,
+    "baseline_kwh": 165000,
     "size_multipliers": {
-      "small": 0.85,
-      "medium": 1.0,
-      "large": 1.2
+        "small": 0.6,
+        "medium": 1.0,
+        "large": 1.7
     },
     "industry_class": "low_intensity"
-  },
+},
   "school": {
-    "baseline_kwh": 100000,
+    "baseline_kwh": 437500,
     "size_multipliers": {
-      "small": 0.9,
-      "medium": 1.0,
-      "large": 1.1
+        "small": 0.6,
+        "medium": 1.0,
+        "large": 1.8
     },
     "industry_class": "low_intensity"
-  },
+},
   "residential": {
-    "baseline_kwh": 25000,
+    "baseline_kwh": 20000,
     "size_multipliers": {
-      "small": 0.8,
-      "medium": 1.0,
-      "large": 1.2
+        "small": 0.52,
+        "medium": 0.89,
+        "large": 1.298
     },
     "industry_class": "household"
-  },
+}
+,
   "farm": {
-    "baseline_kwh": 120000,
+    "baseline_kwh": 195198.93,
     "size_multipliers": {
-      "small": 0.8,
-      "medium": 1.0,
-      "large": 1.3
+        "small": 0.45,
+        "medium": 0.92,
+        "large": 1.3
     },
     "industry_class": "low_intensity"
-  },
-  "warehouse": {
-    "baseline_kwh": 180000,
-    "size_multipliers": {
-      "small": 0.85,
-      "medium": 1.0,
-      "large": 1.2
-    },
-    "industry_class": "low_intensity"
-  }
+}
 }
 
 }

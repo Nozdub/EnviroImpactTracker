@@ -1,0 +1,101 @@
+# Data Sources & Calculations for Baselines
+
+This document explains the sources, calculations, and reasoning behind each baseline value used in `static_config.json`.
+
+---
+
+## Factory
+
+- **Total industry usage (GWh)**: 75,603 GWh
+- **Number of industrial companies**: 9,436
+- **Baseline calculation**:  
+  75,603,000 MWh / 9,436 ≈ 8,013 MWh per factory
+- **Source(s)**:  
+  - [SSB - Energibruk i industrien](https://www.ssb.no/energi-og-industri/energi/statistikk/energibruk-i-industrien)  
+  - [SSB - Bedrifter etter størrelse og næring](https://www.ssb.no/virksomheter-foretak-og-regnskap/virksomheter-og-foretak/statistikk/virksomheter)
+
+---
+
+## Data Center
+
+- **Total usage (2024)**: 1,612.88 GWh
+- **Estimated number of data centers**: 150
+- **Baseline calculation**:  
+  1,612,880 MWh / 150 ≈ 10,752 MWh per data center
+- **Source(s)**:  
+  - [Elhub Report - Norske datasentre forbruksanalyse (2024)](file-6PvHdZ6YvUyjfTSCgKRMj9)
+
+---
+
+## Farm
+
+- **Total farm usage**: 7,300 GWh
+- **Number of farms**: 37,400
+- **Baseline calculation**:  
+  7,300,000 MWh / 37,400 ≈ 195 MWh per farm
+- **Source(s)**:  
+  - [SSB - Energibruk i jordbruket](https://www.ssb.no/jord-skog-jakt-og-fiskeri/jordbruk/artikler/jordbruk-og-miljo-energibruk-i-jordbruket)
+  - [SSB - Bedrifter etter størrelse og næring](https://www.ssb.no/virksomheter-foretak-og-regnskap/virksomheter-og-foretak/statistikk/virksomheter)
+
+---
+
+## Hospital
+
+- **Estimated total usage**: 1,600 GWh
+- **Number of hospitals**: 42
+- **Baseline calculation**:  
+  1,600,000 MWh / 42 ≈ 38,095 MWh per hospital
+- **Source(s)**:  
+  - [Estimate based on sector reports, Statnett](https://www.statnett.no)
+  - [Wikipedia - List of Norwegian hospitals](https://no.wikipedia.org/wiki/Liste_over_norske_sykehus)
+
+---
+
+## Office Building
+
+- **Estimated total usage**: 5,990 GWh (estimated 40% share of service sector)
+- **Number of office-related businesses**: 38,550
+- **Baseline calculation**:  
+  5,990,000 MWh / 38,550 ≈ 155,400 kWh per office building
+- **Source(s)**:  
+  - [SSB - Strømforbruk etter prisområde og forbrukergruppe (2023)](https://www.ssb.no/energi-og-industri/energi/statistikk/elektrisitet)
+  - [SSB - Bedrifter etter størrelse og næring (2023)](https://www.ssb.no/virksomheter-foretak-og-regnskap/virksomheter-og-foretak/statistikk/virksomheter)
+
+---
+
+## Retail Store
+
+- **Estimated baseline usage**: 165,000 kWh
+- **Assumptions**:
+  - Typical size: ~600 m²
+  - Specific energy use: ~275 kWh/m²/year (based on NVE report)
+- **Calculation**:  
+  600 m² * 275 kWh/m²/year ≈ 165,000 kWh/year
+- **Source(s)**:  
+  - [NVE Rapport 2014-01: Spesifikk energibruk i yrkesbygg](https://publikasjoner.nve.no/rapport/2014/rapport2014_01.pdf)
+
+---
+
+## School
+
+- **Estimated baseline usage**: 437,500 kWh
+- **Assumptions**:
+  - Typical school size: ~2,500 m²
+  - Specific energy use: ~175 kWh/m²/year (NVE report)
+- **Calculation**:  
+  2,500 m² * 175 kWh/m²/year ≈ 437,500 kWh/year
+- **Source(s)**:  
+  - [NVE Rapport 2014-01: Spesifikk energibruk i yrkesbygg](https://publikasjoner.nve.no/rapport/2014/rapport2014_01.pdf)
+
+---
+
+## Residential
+
+- **Building types**:
+  - Small = Leilighet (blokk): 10,899 kWh/year
+  - Medium = Rekkehus: 17,090 kWh/year
+  - Large = Enebolig: 25,776 kWh/year
+- **Source(s)**:  
+  - [Average electricity use by dwelling type, Norway (NVE / public reports)]
+
+---

@@ -43,6 +43,7 @@ def calculate(input_data: CalculationInput):
         print(f"[DEBUG] Estimated kWh (baseline × multiplier): {estimated_kwh}")
 
 
+
     # Emission calculation
     if input_data.custom_emission_factor is not None:
         emission_factor = input_data.custom_emission_factor
@@ -74,9 +75,6 @@ def calculate(input_data: CalculationInput):
     else:
         print(f"[DEBUG] No benchmark data available for {input_data.facility_type} ({input_data.size})")
 
-
-
-
     # Determine industry class and price modifier
     industry_class = facility_data.get("industry_class", "household")
     industry_modifier = config["industry_classes"].get(industry_class, 1.0)
@@ -87,6 +85,13 @@ def calculate(input_data: CalculationInput):
     power_region = config["power_grid_regions"].get(input_data.region)
     if not power_region:
         raise HTTPException(status_code=400, detail=f"Region '{input_data.region}' has no power grid mapping.")
+
+    # If facility type is data_center → apply power region multiplier
+    if input_data.facility_type == "data_center":
+        power_multiplier = facility_data.get("power_region_multipliers", {}).get(power_region, 1.0)
+        estimated_kwh *= power_multiplier
+        print(f"[DEBUG] Applying power region multiplier for data_center: {power_multiplier}")
+        print(f"[DEBUG] Estimated kWh after region multiplier: {estimated_kwh}")
 
     # Determine price per kWh
     if input_data.custom_price_per_kwh is not None:
