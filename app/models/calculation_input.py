@@ -9,7 +9,7 @@ class CalculationInput(BaseModel):
         "Sogn og Fjordane", "Trøndelag", "Nordland", "Troms", "Finnmark"
     ]
     facility_type: Literal[
-        "data_center", "factory", "hospital", "farm", "warehouse", "office_building",
+        "data_center", "factory", "hospital", "farm", "residential", "office_building",
         "school", "supermarket", "retail_store", "university", "municipal_building"
     ]
     size: Literal["small", "medium", "large"]
