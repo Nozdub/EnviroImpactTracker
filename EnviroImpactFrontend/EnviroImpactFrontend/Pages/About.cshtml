@@ -1,0 +1,63 @@
+﻿@page
+@model EnviroImpactFrontend.Pages.AboutModel
+@{
+    ViewData["Title"] = "About";
+}
+
+<div class="main-content d-flex justify-content-center mt-4">
+    <div class="card shadow p-4" style="background-color: #f9f9f9; max-width: 1200px; width: 100%;">
+        <h2 class="fw-bold">About</h2>
+        <p>EnviroImpactTracker is an educational development project, built by a single developer as part of an ongoing learning journey in full-stack software engineering.</p>
+
+        <p>The goal of the project is to create a reliable and transparent calculator for estimating energy use, CO₂ emissions, and energy costs for various types of buildings and facilities in Norway. The tool combines live data (electricity prices, emissions factors) with well-documented baseline estimates sourced from public data providers such as Statistics Norway (SSB), NVE, Enova, and sector-specific reports.</p>
+
+        <p><strong>Disclaimer:</strong> The tool is a work in progress and should not yet be used for official reporting or critical decision-making. All baseline data, assumptions, and sources are openly documented to support transparency and iterative improvement.</p>
+
+        <p>If you wish to contribute feedback or suggest improvements, you are welcome to contact the developer or follow the project on GitHub.</p>
+
+        <h3 class="fw-bold mt-4">Technologies Used</h3>
+        <p>The application is built as a full-stack project with a modern architecture:</p>
+        <ul>
+            <li><strong>Backend:</strong> Python (FastAPI) — provides REST API endpoints for calculation logic</li>
+            <li><strong>Frontend:</strong> .NET Core MVC (Razor Pages) — provides the user interface and interacts with the backend</li>
+            <li><strong>Hosting:</strong> Local development; designed for potential cloud deployment (Azure, AWS, etc.)</li>
+            <li><strong>Version Control:</strong> GitHub</li>
+        </ul>
+
+        <h3 class="fw-bold mt-4">Live Data Sources and APIs</h3>
+        <ul>
+            <li><strong>Electricity prices:</strong> <a href="https://www.hvakosterstrommen.no/" target="_blank">hvakosterstrommen.no</a> (API integration)</li>
+            <li><strong>CO₂ emission factors:</strong> <a href="https://electricitymap.org/" target="_blank">Electricity Maps API</a> (live carbon intensity for Norway)</li>
+        </ul>
+
+        <h3 class="fw-bold mt-4">Baseline Data and Assumptions</h3>
+        <p>For facility energy use and emission benchmarks, baseline data is compiled from public and sector-specific sources, including:</p>
+        <ul>
+            <li><strong>Statistics Norway (SSB)</strong> — energy use in industry, services, residential, agriculture</li>
+            <li><strong>Norwegian Water Resources and Energy Directorate (NVE)</strong> — sector reports on building energy use</li>
+            <li><strong>Enova</strong> — technology and sectoral energy efficiency reports</li>
+            <li>Additional reports (Elhub, Statnett, industry-specific publications)</li>
+        </ul>
+        <p>All baseline calculations are transparently documented in a <code>baseline_data.md</code> file, available in the <a href="https://github.com/Nozdub/EnviroImpactTracker" target="_blank">project repository on GitHub</a>.</p>
+
+        <h3 class="fw-bold mt-4">Purpose of the Project</h3>
+        <p>The primary goal of EnviroImpactTracker is to serve as a learning platform while contributing a useful public tool for estimating building-related energy use and emissions in Norway. The project focuses on:</p>
+        <ul>
+            <li>Learning modern full-stack development</li>
+            <li>Practicing API integration and data modeling</li>
+            <li>Providing transparent, explainable estimates — not a "black box" calculator</li>
+            <li>Encouraging responsible data use in sustainability reporting</li>
+        </ul>
+
+        <h3 class="fw-bold mt-4">Future Improvements</h3>
+        <p>Planned enhancements include:</p>
+        <ul>
+            <li>More granular baseline data (regional, seasonal)</li>
+            <li>More dynamic modeling (usage patterns, retrofit scenarios)</li>
+            <li>Expanded facility types</li>
+            <li>Internationalization (support for additional countries)</li>
+        </ul>
+
+    </div>
+</div>
+
