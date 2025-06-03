@@ -61,6 +61,47 @@ def test_get_facility_types():
     assert len(json_data["facility_types"]) > 0
 
 
+def test_calculate_custom_kwh_overrides_baseline():
+    payload = {
+        "region": "Oslo",
+        "facility_type": "hospital",
+        "size": "small",
+        "custom_kwh": 123456.78
+    }
+
+    response = client.post("/calculate", json=payload)
+    assert response.status_code == 200
+    data = response.json()
+    assert abs(data["estimated_kwh"] - 123456.78) < 0.01  # Should match custom input
+
+
+def test_calculate_custom_price_used():
+    payload = {
+        "region": "Oslo",
+        "facility_type": "office_building",
+        "size": "medium",
+        "custom_price_per_kwh": 2.22
+    }
+
+    response = client.post("/calculate", json=payload)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["metadata"]["price_per_kwh"] == 2.22
+    assert data["metadata"]["price_source"] == "custom"
+
+
+def test_calculate_custom_emission_factor_used():
+    payload = {
+        "region": "Oslo",
+        "facility_type": "school",
+        "size": "large",
+        "custom_emission_factor": 0.012
+    }
+
+    response = client.post("/calculate", json=payload)
+    assert response.status_code == 200
+    data = response.json()
+    assert data["metadata"]["emission_factor_used"] == 0.012
 
 
 
