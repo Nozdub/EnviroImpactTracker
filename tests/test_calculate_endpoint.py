@@ -43,6 +43,27 @@ def test_calculate_valid_request(payload):
     assert "power_grid_region" in data["metadata"]
 
 
+def test_get_regions():
+    response = client.get("/regions")
+    assert response.status_code == 200
+    json_data = response.json()
+    assert "regions" in json_data
+    assert isinstance(json_data["regions"], list)
+    assert len(json_data["regions"]) > 0
+
+
+def test_get_facility_types():
+    response = client.get("/facility-types")
+    assert response.status_code == 200
+    json_data = response.json()
+    assert "facility_types" in json_data
+    assert isinstance(json_data["facility_types"], list)
+    assert len(json_data["facility_types"]) > 0
+
+
+
+
+
 # NEGATIVE TESTS
 def test_calculate_invalid_region():
     payload = {
@@ -54,7 +75,7 @@ def test_calculate_invalid_region():
     response = client.post("/calculate", json=payload)
     assert response.status_code == 422
     data = response.json()
-    assert "Invalid region" in data["detail"]
+    assert data["detail"][0]["loc"] == ["body", "region"]
 
 
 def test_calculate_invalid_facility_type():
@@ -67,7 +88,7 @@ def test_calculate_invalid_facility_type():
     response = client.post("/calculate", json=payload)
     assert response.status_code == 422
     data = response.json()
-    assert "Invalid facility type" in data["detail"]
+    assert data["detail"][0]["loc"] == ["body", "facility_type"]
 
 
 def test_calculate_invalid_size():
@@ -80,4 +101,7 @@ def test_calculate_invalid_size():
     response = client.post("/calculate", json=payload)
     assert response.status_code == 422
     data = response.json()
-    assert "Invalid size" in data["detail"]
+    assert data["detail"][0]["loc"] == ["body", "size"]
+
+
+
