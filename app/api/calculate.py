@@ -43,10 +43,10 @@ def calculate(input_data: CalculationInput):
         print(f"[DEBUG] Estimated kWh (baseline × multiplier): {estimated_kwh}")
 
 
-
     # Emission calculation
     if input_data.custom_emission_factor is not None:
         emission_factor = input_data.custom_emission_factor
+        emission_timestamp = None
         print(f"[DEBUG] Using custom emission factor: {emission_factor}")
     else:
         try:
