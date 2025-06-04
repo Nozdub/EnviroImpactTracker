@@ -157,7 +157,7 @@ def test_calculate_price_api_fallback():
         assert data["metadata"]["price_source"] == "default"
 
 
-# NEGATIVE TESTS
+# Tests for negative or obvious incorrect selections
 def test_calculate_invalid_region():
     payload = {
         "region": "Atlantis", # Obvious incorrect region right, no atlantis here right?
