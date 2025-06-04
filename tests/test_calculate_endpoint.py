@@ -1,6 +1,7 @@
 from fastapi.testclient import TestClient
 from app.main import app
 import pytest
+from unittest.mock import patch
 
 client = TestClient(app)
 
@@ -104,6 +105,56 @@ def test_calculate_custom_emission_factor_used():
     assert data["metadata"]["emission_factor_used"] == 0.012
 
 
+def test_data_center_power_region_multiplier_applied():
+    payload = {
+        "region": "Oslo",  # NO1 → 1.25
+        "facility_type": "data_center",
+        "size": "medium"
+    }
+
+    response = client.post("/calculate", json=payload)
+    assert response.status_code == 200
+    data = response.json()
+
+    # Correct values from current static_config.json
+    baseline = 6451520
+    size_multiplier = 1.0
+    power_region_multiplier = 1.25
+
+    expected_kwh = baseline * size_multiplier * power_region_multiplier
+    assert abs(data["estimated_kwh"] - expected_kwh) < 1.0
+
+
+def test_calculate_emission_api_fallback():
+    with patch("app.api.calculate.fetch_emission_factor", side_effect=Exception("API down")):
+        payload = {
+            "region": "Oslo",
+            "facility_type": "school",
+            "size": "medium"
+        }
+
+        response = client.post("/calculate", json=payload)
+        assert response.status_code == 200
+        data = response.json()
+        # Sets the fallback config
+        assert data["metadata"]["emission_factor_used"] == 0.017
+
+
+def test_calculate_price_api_fallback():
+    with patch("app.api.calculate.fetch_average_price", side_effect=Exception("API down")):
+        payload = {
+            "region": "Oslo",
+            "facility_type": "school",
+            "size": "medium"
+        }
+
+        response = client.post("/calculate", json=payload)
+        assert response.status_code == 200
+        data = response.json()
+        # Fallback to set modifiers for pricing, industry type and location
+        expected_price = 1.20 * 0.85
+        assert abs(data["metadata"]["price_per_kwh"] - expected_price) < 0.01
+        assert data["metadata"]["price_source"] == "default"
 
 # NEGATIVE TESTS
 def test_calculate_invalid_region():
