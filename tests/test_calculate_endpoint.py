@@ -156,6 +156,7 @@ def test_calculate_price_api_fallback():
         assert abs(data["metadata"]["price_per_kwh"] - expected_price) < 0.01
         assert data["metadata"]["price_source"] == "default"
 
+
 # NEGATIVE TESTS
 def test_calculate_invalid_region():
     payload = {
