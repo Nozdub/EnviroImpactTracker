@@ -40,8 +40,8 @@ body {
     justify-content: flex-start;
     position: relative;
     min-height: 600px;
-    width: 100%; /* THIS is the key: take full screen width */
-    padding-left: 50px; /* optional: move input panel more to left */
+    width: 100%; 
+    padding-left: 50px; 
     box-sizing: border-box;
 }
 
@@ -81,6 +81,18 @@ body {
     .result-card .row .col + .col {
         border-left: 3px solid white;
         padding-left: 20px;
+    }
+/* Toggle link styles */
+.toggle-link {
+    color: #666;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+    .toggle-link.active {
+        color: #007bff; /* Bootstrap primary blue */
+        font-weight: bold;
+        text-decoration: underline;
     }
 
 

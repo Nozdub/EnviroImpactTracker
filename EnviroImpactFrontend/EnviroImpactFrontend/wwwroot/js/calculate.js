@@ -6,11 +6,35 @@ let costChart = null;
 
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("impactForm");
-    const advancedFields = document.getElementById("advancedFields");
-    const simpleLabel = document.getElementById("simpleLabel");
-    const advancedLabel = document.getElementById("advancedLabel");
     const resultCard = document.getElementById("resultCard");
 
+    // Simple / Advanced Toggle Setup
+    const simpleToggle = document.getElementById("simpleToggle");
+    const advancedToggle = document.getElementById("advancedToggle");
+    const advancedFields = document.getElementById("advancedFields");
+
+    // Initial state = Simple active
+    simpleToggle.classList.add("active");
+    advancedToggle.classList.remove("active");
+    advancedFields.style.display = "none";
+
+    // Simple click
+    simpleToggle.addEventListener("click", function (e) {
+        e.preventDefault();
+        simpleToggle.classList.add("active");
+        advancedToggle.classList.remove("active");
+        advancedFields.style.display = "none";
+    });
+
+    // Advanced click
+    advancedToggle.addEventListener("click", function (e) {
+        e.preventDefault();
+        advancedToggle.classList.add("active");
+        simpleToggle.classList.remove("active");
+        advancedFields.style.display = "block";
+    });
+
+    // Fetch regions
     fetch("http://localhost:8000/regions")
         .then(response => response.json())
         .then(data => {
@@ -28,6 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("location").innerHTML = '<option value="">-- Failed to load regions --</option>';
         });
 
+    // Fetch facility types
     fetch("http://localhost:8000/facility-types")
         .then(response => response.json())
         .then(data => {
@@ -45,18 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("facilityType").innerHTML = '<option value="">-- Failed to load types --</option>';
         });
 
-    simpleLabel.addEventListener("click", () => {
-        advancedFields.style.display = "none";
-        simpleLabel.classList.add("text-primary");
-        advancedLabel.classList.remove("text-primary");
-    });
-
-    advancedLabel.addEventListener("click", () => {
-        advancedFields.style.display = "block";
-        advancedLabel.classList.add("text-primary");
-        simpleLabel.classList.remove("text-primary");
-    });
-
+    // FORM SUBMIT HANDLER
     form.addEventListener("submit", async (event) => {
         event.preventDefault();
 
