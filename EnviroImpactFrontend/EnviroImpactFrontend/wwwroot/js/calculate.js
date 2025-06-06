@@ -106,7 +106,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const result = await response.json();
             const meta = result.metadata;
-            const benchmarkData = meta.benchmark;
+            const benchmarkData = meta.best_practice_target;
 
             // Clear old charts
             [benchmarkChart, co2Chart, costChart].forEach(chart => {
@@ -115,21 +115,21 @@ document.addEventListener("DOMContentLoaded", () => {
             benchmarkChart = co2Chart = costChart = null;
 
             // Chart: kWh
-            if (benchmarkData?.benchmark_kwh !== null) {
+            if (benchmarkData?.target_kwh !== null) {
                 const ctx = document.getElementById("benchmarkChart").getContext("2d");
-                benchmarkChart = renderBarChart(ctx, "kWh/year", benchmarkData.benchmark_kwh, result.estimated_kwh, "Energy Usage (kWh/year)", "kWh");
+                benchmarkChart = renderBarChart(ctx, "kWh/year", benchmarkData.target_kwh, result.estimated_kwh, "Energy Usage (kWh/year)", "kWh");
             }
 
             // Chart: CO2
-            if (benchmarkData?.benchmark_co2 !== null) {
+            if (benchmarkData?.target_co2 !== null) {
                 const co2Ctx = document.getElementById("co2Chart").getContext("2d");
-                co2Chart = renderBarChart(co2Ctx, "CO₂ (kg/year)", benchmarkData.benchmark_co2, result.estimated_co2_kg, "CO₂ Emissions (kg/year)", "kg");
+                co2Chart = renderBarChart(co2Ctx, "CO₂ (kg/year)", benchmarkData.target_co2, result.estimated_co2_kg, "CO₂ Emissions (kg/year)", "kg");
             }
 
             // Chart: Cost
-            if (benchmarkData?.benchmark_cost !== null) {
+            if (benchmarkData?.target_cost !== null) {
                 const costCtx = document.getElementById("costChart").getContext("2d");
-                costChart = renderBarChart(costCtx, "NOK/year", benchmarkData.benchmark_cost, result.estimated_cost_nok, "Energy Cost (NOK/year)", "NOK");
+                costChart = renderBarChart(costCtx, "NOK/year", benchmarkData.target_cost, result.estimated_cost_nok, "Energy Cost (NOK/year)", "NOK");
             }
 
             // Tooltips
@@ -159,7 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return new Chart(ctx, {
             type: "bar",
             data: {
-                labels: ["Benchmark", "Your Facility"],
+                labels: ["Best Practice Target", "Your Facility"],
                 datasets: [{
                     label: label,
                     data: [benchmarkValue, actualValue],
