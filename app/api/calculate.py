@@ -42,6 +42,19 @@ def calculate(input_data: CalculationInput):
         print(f"[DEBUG] Size multiplier: {multiplier}")
         print(f"[DEBUG] Estimated kWh (baseline × multiplier): {estimated_kwh}")
 
+    # Applyihng usage pattern modifiers
+    pattern_modifiers = {
+        "constant": {"kwh": 1.0, "co2": 1.0, "cost": 1.0},
+        "intermittent": {"kwh": 0.5, "co2": 0.95, "cost": 0.95},
+        "peak": {"kwh": 1.0, "co2": 1.05, "cost": 1.2 }
+    }
+
+    pattern = getattr(input_data, "usage_pattern", "constant")
+    mod = pattern_modifiers.get(pattern, pattern_modifiers["constant"])
+
+    estimated_kwh *= mod["kwh"]
+    print(f"[DEBUG] Applied usage pattern modifiers ({pattern}): kwh modifier {mod['kwh']}")
+
 
     # Emission calculation
     if input_data.custom_emission_factor is not None:
