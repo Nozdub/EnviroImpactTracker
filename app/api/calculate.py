@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from app.models.calculation_input import CalculationInput
 from app.services.config_loader import load_static_config
 import asyncio
-from app.services.electricity_price_api import fetch_average_price
+from app.services.electricity_price_api import fetch_average_price_last_12_months
 from app.services.benchmark_loader import load_benchmark_data
 from app.services.emission_api import fetch_emission_factor
 
@@ -116,7 +116,7 @@ def calculate(input_data: CalculationInput):
         print(f"[DEBUG] Using custom price per kWh: {effective_price}")
     else:
         try:
-            base_price = asyncio.run(fetch_average_price(power_region))
+            base_price = asyncio.run(fetch_average_price_last_12_months(power_region))
             effective_price = base_price * industry_modifier
             price_source = "api"
             print(f"[DEBUG] Base price from API (NOx): {base_price}")
