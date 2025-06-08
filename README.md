@@ -64,6 +64,10 @@ All baseline assumptions are documented and sourced from public Norwegian data.
 
 ---
 
+## Future updates
+- Add more advanced metrics.
+- Build up a real time database of comparable data.
+
 ## Installation
 
 ### Backend
@@ -91,3 +95,4 @@ Run the frontend with IIS Express or:
 
 ```bash
 dotnet run
+
