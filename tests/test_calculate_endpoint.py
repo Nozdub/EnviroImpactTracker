@@ -141,7 +141,7 @@ def test_calculate_emission_api_fallback():
 
 
 def test_calculate_price_api_fallback():
-    with patch("app.api.calculate.fetch_average_price", side_effect=Exception("API down")):
+    with patch("app.api.calculate.fetch_average_price_last_12_months", side_effect=Exception("API down")):
         payload = {
             "region": "Oslo",
             "facility_type": "school",
