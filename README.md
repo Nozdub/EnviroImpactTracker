@@ -66,6 +66,7 @@ All baseline assumptions are documented and sourced from public Norwegian data.
 
 ## Future updates
 - Add more advanced metrics.
+- Find a usable price api
 - Build up a real time database of comparable data.
 
 ## Installation
