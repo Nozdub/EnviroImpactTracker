@@ -112,28 +112,44 @@ def calculate(input_data: CalculationInput):
     # Determine price per kWh
     if input_data.custom_price_per_kwh is not None:
         effective_price = input_data.custom_price_per_kwh
+        base_price_nok = effective_price
         price_source = "custom"
         print(f"[DEBUG] Using custom price per kWh: {effective_price}")
     else:
         try:
-            base_price = asyncio.run(fetch_average_price_last_12_months(power_region))
-            effective_price = base_price * industry_modifier
+            base_price_nok = asyncio.run(fetch_average_price_last_12_months(power_region))
+            effective_price = base_price_nok * industry_modifier
             price_source = "api"
-            print(f"[DEBUG] Base price from API (NOx): {base_price}")
+            print(f"[DEBUG] Base price from API (NOx): {base_price_nok}")
         except Exception:
-            base_price = config["pricing"].get("default_nok_per_kwh", 1.20)
-            effective_price = base_price * industry_modifier
+            base_price_nok = config["pricing"].get("default_nok_per_kwh", 1.20)
+            effective_price = base_price_nok * industry_modifier
             price_source = "default"
-            print(f"[DEBUG] Fallback base price: {base_price}")
+            print(f"[DEBUG] Fallback base price: {base_price_nok}")
 
         print(f"[DEBUG] Effective price after modifier: {effective_price} (source: {price_source})")
 
-    estimated_cost_nok = estimated_kwh * effective_price
+
+    # Determine if MVA should be added
+    is_vat_exempt = power_region == "NO4"
+
+    # Add estimated grid fee
+    grid_fee_nok = 0.30
+    raw_total_price = base_price_nok + grid_fee_nok
+
+    # Add 25% VAT unless NO4
+    vat = 0.0 if is_vat_exempt else raw_total_price * 0.25
+    final_price_per_kwh = raw_total_price + vat
+
+    print(f"[DEBUG] Raw price: {base_price_nok}, Grid fee: {grid_fee_nok}, VAT: {vat}")
+    print(f"[DEBUG] Final adjusted price/kWh: {final_price_per_kwh} NOK (MVA exempt: {is_vat_exempt})")
+
+    estimated_cost_nok = estimated_kwh * final_price_per_kwh
     print(f"[DEBUG] Total estimated cost (kWh × price): {estimated_cost_nok}")
     print("------------------------------------------------------------")
 
     # Calculate Best Practice Target cost
-    bench_cost = bench_kwh * effective_price if bench_kwh else None
+    bench_cost = bench_kwh * final_price_per_kwh if bench_kwh else None
     cost_percent = ((estimated_cost_nok - bench_cost) / bench_cost) * 100 if bench_cost else None
 
     return {
@@ -150,6 +166,11 @@ def calculate(input_data: CalculationInput):
             "price_source": price_source,
             "emission_factor_used": emission_factor,
             "emission_factor_timestamp": emission_timestamp,
+            "raw_price": base_price_nok,
+            "grid_fee_added": grid_fee_nok,
+            "vat_added": vat,
+            "final_price": final_price_per_kwh,
+            "is_vat_exempt": is_vat_exempt,
 
             **({"estimated_baseline_kwh": baseline} if baseline is not None else {}),
             **({"size_multiplier": multiplier} if multiplier is not None else {}),
