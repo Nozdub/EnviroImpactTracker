@@ -112,6 +112,7 @@ def calculate(input_data: CalculationInput):
     # Determine price per kWh
     if input_data.custom_price_per_kwh is not None:
         effective_price = input_data.custom_price_per_kwh
+        base_price_nok = effective_price
         price_source = "custom"
         print(f"[DEBUG] Using custom price per kWh: {effective_price}")
     else:
