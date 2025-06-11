@@ -1,44 +1,34 @@
-# app/services/electricity_price_api.py
-
 import httpx
 from datetime import datetime, timedelta
 import os
 from dotenv import load_dotenv
 
-# Load API Key
 load_dotenv()
 STROMPRISER_API_KEY = os.getenv("STROMPRISER_API_KEY")
 
-# Map NOx to Strompriser.no region IDs
-STROMPRISER_REGION_MAP = {
+POWER_REGION_MAP = {
     "NO1": 1,
     "NO2": 2,
     "NO3": 3,
     "NO4": 4,
-    "NO5": 5
+    "NO5": 5,
 }
 
 async def fetch_average_price_last_12_months(power_region: str) -> float:
-    """Fetches 12-month average kwh price for selected power grid region (from strompriser.no)"""
+    region_id = POWER_REGION_MAP.get(power_region)
+    if not region_id:
+        raise ValueError(f"Unknown power region: {power_region}")
 
-    region_id = STROMPRISER_REGION_MAP.get(power_region)
-
-    if region_id is None:
-        raise ValueError(f"Invalid power region: {power_region}")
-
-    today = datetime.utcnow().date()
-    one_year_ago = today - timedelta(days=365)
+    end_date = datetime.now().date()
+    start_date = end_date - timedelta(days=365)
 
     url = (
         f"https://api.strompriser.no/public/prices"
-        f"?country=Norway"
-        f"&startDate={one_year_ago}"
-        f"&endDate={today}"
-        f"&region={region_id}"
+        f"?country=Norway&startDate={start_date}&endDate={end_date}&region={region_id}"
     )
 
     headers = {
-        "Authorization": f"Bearer {STROMPRISER_API_KEY}"
+        "api-key": STROMPRISER_API_KEY
     }
 
     try:
@@ -47,15 +37,13 @@ async def fetch_average_price_last_12_months(power_region: str) -> float:
             response.raise_for_status()
             data = response.json()
 
-            # Expecting: data = list of { "price": value, ... }
-            prices = [entry["price"] for entry in data]
+            if not data or not isinstance(data, list) or "dailyPriceArray" not in data[0]:
+                raise ValueError("Unexpected API response format")
 
-            if not prices:
-                raise ValueError("No price data returned from strompriser.no API.")
-
-            avg_price_nok = sum(prices) / len(prices)
-
-            return round(avg_price_nok, 4)
+            price_list = data[0]["dailyPriceArray"]
+            average_ore = sum(price_list) / len(price_list)
+            average_nok = round(average_ore / 100, 4)
+            return average_nok
 
     except Exception as e:
         print(f"[ERROR] Failed to fetch 12-month average price for {power_region}: {e}")
