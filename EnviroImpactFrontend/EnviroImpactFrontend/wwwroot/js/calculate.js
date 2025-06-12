@@ -134,13 +134,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
             // Tooltips
             if (meta.estimated_baseline_kwh !== undefined && meta.size_multiplier !== undefined) {
-                document.getElementById("usageInfo").title = `Estimated using baseline: ${meta.estimated_baseline_kwh.toLocaleString()} kWh × size multiplier: ${meta.size_multiplier} = ${result.estimated_kwh.toLocaleString()} kWh`;
+                document.getElementById("usageInfo").title =
+                    `Estimated using baseline (${meta.estimated_baseline_kwh.toLocaleString()} kWh) × multiplier (${meta.size_multiplier}) = ${result.estimated_kwh.toLocaleString()} kWh`;
             } else {
-                document.getElementById("usageInfo").title = `Custom usage provided: ${result.estimated_kwh.toLocaleString()} kWh`;
+                document.getElementById("usageInfo").title =
+                    `Custom usage provided: ${result.estimated_kwh.toLocaleString()} kWh`;
             }
 
-            document.getElementById("emissionsInfo").title = `CO₂ calculated using factor: ${meta.emission_factor_used} kg/kWh × ${result.estimated_kwh.toLocaleString()} kWh`;
-            document.getElementById("costPerYearInfo").title = `Base price: ${meta.price_per_kwh} NOK/kWh (${meta.price_source}), adjusted for ${meta.industry_class} (×${meta.industry_modifier})`;
+            document.getElementById("emissionsInfo").title =
+                `CO₂ = ${result.estimated_kwh.toLocaleString()} kWh × ${meta.emission_factor_used} kg/kWh = ${result.estimated_co2_kg.toLocaleString()} kg`;
+
+            document.getElementById("costPerYearInfo").title =
+                `Base price: ${meta.raw_price} + grid fee: ${meta.grid_fee_added} ${meta.is_vat_exempt ? "(VAT exempt)" : "+ 25% VAT"} = final: ${meta.final_price} NOK/kWh, adjusted for ${meta.industry_class} (×${meta.industry_modifier})`;
 
             document.getElementById("resultKwh").innerText = result.estimated_kwh.toLocaleString();
             document.getElementById("resultCo2").innerText = result.estimated_co2_kg.toLocaleString();
