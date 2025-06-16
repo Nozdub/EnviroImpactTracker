@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("EnviroImpactFrontend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+36753af40e6b49a5db57825d0d98ebe3834159ff")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2736713e35ae50dec636117282e5c15fa2c258d2")]
 [assembly: System.Reflection.AssemblyProductAttribute("EnviroImpactFrontend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("EnviroImpactFrontend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
