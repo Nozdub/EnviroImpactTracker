@@ -6,7 +6,7 @@ let costChart = null;
 
 let lastResult = null;
 let lastMeta = null;
-let timeFrame = "year"; // Default
+let timeFrame = "year";
 
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("impactForm");
@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
         event.preventDefault();
         submitButton.disabled = true;
         loadingStatus.style.display = "block";
-        resultCard.classList.add("inactive");
+        resultCard.classList.remove("active");
 
         const data = {
             region: document.getElementById("location").value,
@@ -97,7 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!response.ok) {
                 const error = await response.json();
                 if (Array.isArray(error)) {
-                    const message = error.map(e => `��� ${e.loc.join(".")}: ${e.msg}`).join("\n");
+                    const message = error.map(e => `• ${e.loc.join(".")}: ${e.msg}`).join("\n");
                     alert("Validation Errors:\n" + message);
                 } else if (error.detail) {
                     alert("Error: " + error.detail);
@@ -126,7 +126,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (benchmarkData?.target_co2 !== null) {
                 const co2Ctx = document.getElementById("co2Chart").getContext("2d");
-                co2Chart = renderBarChart(co2Ctx, "CO��� (kg/year)", benchmarkData.target_co2, result.estimated_co2_kg, "CO��� Emissions (kg/year)", "kg");
+                co2Chart = renderBarChart(co2Ctx, "CO₂ (kg/year)", benchmarkData.target_co2, result.estimated_co2_kg, "CO₂ Emissions (kg/year)", "kg");
             }
 
             if (benchmarkData?.target_cost !== null) {
@@ -135,16 +135,14 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             updateResultDisplay(timeFrame === "month" ? 1 / 12 : 1);
-            submitButton.disabled = false;
-            loadingStatus.style.display = "none";
-            resultCard.classList.remove("inactive");
-
+            resultCard.classList.add("active");
         } catch (err) {
-            submitButton.disabled = false;
-            loadingStatus.style.display = "none";
-            resultCard.classList.add("inactive");
             console.error("Error contacting backend:", err);
             alert("Could not connect to backend.");
+            resultCard.classList.remove("active");
+        } finally {
+            submitButton.disabled = false;
+            loadingStatus.style.display = "none";
         }
     });
 
@@ -178,13 +176,13 @@ function updateResultDisplay(scaling) {
     const costInfo = document.getElementById("costPerYearInfo");
 
     if (meta.estimated_baseline_kwh !== undefined && meta.size_multiplier !== undefined) {
-        usageInfo.title = `Estimated using baseline (${meta.estimated_baseline_kwh.toLocaleString()} kWh) �� multiplier (${meta.size_multiplier}) �� scale (${scaling})`;
+        usageInfo.title = `Estimated using baseline (${meta.estimated_baseline_kwh.toLocaleString()} kWh) × multiplier (${meta.size_multiplier}) × scale (${scaling})`;
     } else {
         usageInfo.title = `Custom usage scaled for selected time frame (${scaling})`;
     }
 
-    emissionsInfo.title = `CO��� = ${scaledKwh.toLocaleString()} kWh �� ${meta.emission_factor_used} kg/kWh = ${scaledCo2.toLocaleString()} kg`;
-    costInfo.title = `Base price: ${meta.raw_price} + grid fee: ${meta.grid_fee_added} ${meta.is_vat_exempt ? "(VAT exempt)" : "+ 25% VAT"} = final: ${meta.final_price} NOK/kWh, adjusted �� ${meta.industry_modifier}, scaled by ${scaling}`;
+    emissionsInfo.title = `CO₂ = ${scaledKwh.toLocaleString()} kWh × ${meta.emission_factor_used} kg/kWh = ${scaledCo2.toLocaleString()} kg`;
+    costInfo.title = `Base price: ${meta.raw_price} + grid fee: ${meta.grid_fee_added} ${meta.is_vat_exempt ? "(VAT exempt)" : "+ 25% VAT"} = final: ${meta.final_price} NOK/kWh, adjusted × ${meta.industry_modifier}, scaled by ${scaling}`;
 
     document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => new bootstrap.Tooltip(el));
 }
