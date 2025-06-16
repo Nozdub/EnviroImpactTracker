@@ -4,28 +4,25 @@ let benchmarkChart = null;
 let co2Chart = null;
 let costChart = null;
 
+let lastResult = null;
+let lastMeta = null;
+let timeFrame = "year"; // Default
+
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("impactForm");
     const resultCard = document.getElementById("resultCard");
     const loadingStatus = document.getElementById("loadingStatus");
-
     const submitButton = form.querySelector('button[type="submit"]');
+    const timeFrameSelector = document.getElementById("timeFrameSelector");
 
-
-
-    // Simple / Advanced Toggle Setup
     const simpleToggle = document.getElementById("simpleToggle");
     const advancedToggle = document.getElementById("advancedToggle");
     const advancedFields = document.getElementById("advancedFields");
 
-
-
-    // Initial state = Simple active
     simpleToggle.classList.add("active");
     advancedToggle.classList.remove("active");
     advancedFields.style.display = "none";
 
-    // Simple click
     simpleToggle.addEventListener("click", function (e) {
         e.preventDefault();
         simpleToggle.classList.add("active");
@@ -33,7 +30,6 @@ document.addEventListener("DOMContentLoaded", () => {
         advancedFields.style.display = "none";
     });
 
-    // Advanced click
     advancedToggle.addEventListener("click", function (e) {
         e.preventDefault();
         advancedToggle.classList.add("active");
@@ -41,7 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
         advancedFields.style.display = "block";
     });
 
-    // Fetch regions
     fetch("http://localhost:8000/regions")
         .then(response => response.json())
         .then(data => {
@@ -59,7 +54,6 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("location").innerHTML = '<option value="">-- Failed to load regions --</option>';
         });
 
-    // Fetch facility types
     fetch("http://localhost:8000/facility-types")
         .then(response => response.json())
         .then(data => {
@@ -68,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
             data.facility_types.forEach(type => {
                 const option = document.createElement("option");
                 option.value = type;
-                option.textContent = type.replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase());
+                option.textContent = type.replace(/_/g, " ").replace(/\w/g, l => l.toUpperCase());
                 facilitySelect.appendChild(option);
             });
         })
@@ -77,14 +71,11 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("facilityType").innerHTML = '<option value="">-- Failed to load types --</option>';
         });
 
-    // FORM SUBMIT HANDLER
     form.addEventListener("submit", async (event) => {
         event.preventDefault();
-
         submitButton.disabled = true;
-
         loadingStatus.style.display = "block";
-        resultCard.classList.add("inactive");  // Hide old result
+        resultCard.classList.add("inactive");
 
         const data = {
             region: document.getElementById("location").value,
@@ -106,7 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!response.ok) {
                 const error = await response.json();
                 if (Array.isArray(error)) {
-                    const message = error.map(e => `• ${e.loc.join(".")}: ${e.msg}`).join("\n");
+                    const message = error.map(e => `��� ${e.loc.join(".")}: ${e.msg}`).join("\n");
                     alert("Validation Errors:\n" + message);
                 } else if (error.detail) {
                     alert("Error: " + error.detail);
@@ -120,58 +111,36 @@ document.addEventListener("DOMContentLoaded", () => {
             const meta = result.metadata;
             const benchmarkData = meta.best_practice_target;
 
-            // Clear old charts
+            lastResult = result;
+            lastMeta = meta;
+
             [benchmarkChart, co2Chart, costChart].forEach(chart => {
                 if (chart !== null) chart.destroy();
             });
             benchmarkChart = co2Chart = costChart = null;
 
-            // Chart: kWh
             if (benchmarkData?.target_kwh !== null) {
                 const ctx = document.getElementById("benchmarkChart").getContext("2d");
                 benchmarkChart = renderBarChart(ctx, "kWh/year", benchmarkData.target_kwh, result.estimated_kwh, "Energy Usage (kWh/year)", "kWh");
             }
 
-            // Chart: CO2
             if (benchmarkData?.target_co2 !== null) {
                 const co2Ctx = document.getElementById("co2Chart").getContext("2d");
-                co2Chart = renderBarChart(co2Ctx, "CO₂ (kg/year)", benchmarkData.target_co2, result.estimated_co2_kg, "CO₂ Emissions (kg/year)", "kg");
+                co2Chart = renderBarChart(co2Ctx, "CO��� (kg/year)", benchmarkData.target_co2, result.estimated_co2_kg, "CO��� Emissions (kg/year)", "kg");
             }
 
-            // Chart: Cost
             if (benchmarkData?.target_cost !== null) {
                 const costCtx = document.getElementById("costChart").getContext("2d");
                 costChart = renderBarChart(costCtx, "NOK/year", benchmarkData.target_cost, result.estimated_cost_nok, "Energy Cost (NOK/year)", "NOK");
             }
 
-            // Tooltips
-            if (meta.estimated_baseline_kwh !== undefined && meta.size_multiplier !== undefined) {
-                document.getElementById("usageInfo").title =
-                    `Estimated using baseline (${meta.estimated_baseline_kwh.toLocaleString()} kWh) × multiplier (${meta.size_multiplier}) = ${result.estimated_kwh.toLocaleString()} kWh`;
-            } else {
-                document.getElementById("usageInfo").title =
-                    `Custom usage provided: ${result.estimated_kwh.toLocaleString()} kWh`;
-            }
-
-            document.getElementById("emissionsInfo").title =
-                `CO₂ = ${result.estimated_kwh.toLocaleString()} kWh × ${meta.emission_factor_used} kg/kWh = ${result.estimated_co2_kg.toLocaleString()} kg`;
-
-            document.getElementById("costPerYearInfo").title =
-                `Base price: ${meta.raw_price} + grid fee: ${meta.grid_fee_added} ${meta.is_vat_exempt ? "(VAT exempt)" : "+ 25% VAT"} = final: ${meta.final_price} NOK/kWh, adjusted for ${meta.industry_class} (×${meta.industry_modifier})`;
-
-            document.getElementById("resultKwh").innerText = result.estimated_kwh.toLocaleString();
-            document.getElementById("resultCo2").innerText = result.estimated_co2_kg.toLocaleString();
-            document.getElementById("resultCost").innerText = result.estimated_cost_nok.toLocaleString();
-
+            updateResultDisplay(timeFrame === "month" ? 1 / 12 : 1);
             submitButton.disabled = false;
-
             loadingStatus.style.display = "none";
-
             resultCard.classList.remove("inactive");
 
         } catch (err) {
             submitButton.disabled = false;
-
             loadingStatus.style.display = "none";
             resultCard.classList.add("inactive");
             console.error("Error contacting backend:", err);
@@ -179,39 +148,78 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    // Chart rendering helper
-    function renderBarChart(ctx, label, benchmarkValue, actualValue, yTitle, unit) {
-        return new Chart(ctx, {
-            type: "bar",
-            data: {
-                labels: ["Best Practice Target", "Your Facility"],
-                datasets: [{
-                    label: label,
-                    data: [benchmarkValue, actualValue],
-                    backgroundColor: ["rgba(54, 162, 235, 0.7)", "rgba(255, 99, 132, 0.7)"],
-                    borderColor: ["rgba(54, 162, 235, 1)", "rgba(255, 99, 132, 1)"],
-                    borderWidth: 1
-                }]
+    timeFrameSelector.addEventListener("change", () => {
+        timeFrame = timeFrameSelector.value;
+        const scaling = timeFrame === "month" ? 1 / 12 : 1;
+        updateResultDisplay(scaling);
+    });
+});
+
+function updateResultDisplay(scaling) {
+    if (!lastResult || !lastMeta) return;
+
+    const result = lastResult;
+    const meta = lastMeta;
+
+    const scaledKwh = result.estimated_kwh * scaling;
+    const scaledCo2 = result.estimated_co2_kg * scaling;
+    const scaledCost = result.estimated_cost_nok * scaling;
+
+    document.getElementById("resultKwh").innerText = scaledKwh.toLocaleString(undefined, { maximumFractionDigits: 1 });
+    document.getElementById("resultCo2").innerText = scaledCo2.toLocaleString(undefined, { maximumFractionDigits: 2 });
+    document.getElementById("resultCost").innerText = scaledCost.toLocaleString(undefined, { maximumFractionDigits: 2 });
+
+    document.querySelector("h5:has(#usageInfo)").innerHTML = `Usage per ${timeFrame} <i id="usageInfo" class="bi bi-info-circle ms-2 text-secondary" data-bs-toggle="tooltip" title=""></i>`;
+    document.querySelector("h5:has(#emissionsInfo)").innerHTML = `Emissions per ${timeFrame} <i id="emissionsInfo" class="bi bi-info-circle ms-2 text-secondary" data-bs-toggle="tooltip" title=""></i>`;
+    document.querySelector("h5:has(#costPerYearInfo)").innerHTML = `Cost per ${timeFrame} <i id="costPerYearInfo" class="bi bi-info-circle ms-2 text-secondary" data-bs-toggle="tooltip" title=""></i>`;
+
+    const usageInfo = document.getElementById("usageInfo");
+    const emissionsInfo = document.getElementById("emissionsInfo");
+    const costInfo = document.getElementById("costPerYearInfo");
+
+    if (meta.estimated_baseline_kwh !== undefined && meta.size_multiplier !== undefined) {
+        usageInfo.title = `Estimated using baseline (${meta.estimated_baseline_kwh.toLocaleString()} kWh) �� multiplier (${meta.size_multiplier}) �� scale (${scaling})`;
+    } else {
+        usageInfo.title = `Custom usage scaled for selected time frame (${scaling})`;
+    }
+
+    emissionsInfo.title = `CO��� = ${scaledKwh.toLocaleString()} kWh �� ${meta.emission_factor_used} kg/kWh = ${scaledCo2.toLocaleString()} kg`;
+    costInfo.title = `Base price: ${meta.raw_price} + grid fee: ${meta.grid_fee_added} ${meta.is_vat_exempt ? "(VAT exempt)" : "+ 25% VAT"} = final: ${meta.final_price} NOK/kWh, adjusted �� ${meta.industry_modifier}, scaled by ${scaling}`;
+
+    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => new bootstrap.Tooltip(el));
+}
+
+function renderBarChart(ctx, label, benchmarkValue, actualValue, yTitle, unit) {
+    return new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: ["Best Practice Target", "Your Facility"],
+            datasets: [{
+                label: label,
+                data: [benchmarkValue, actualValue],
+                backgroundColor: ["rgba(54, 162, 235, 0.7)", "rgba(255, 99, 132, 0.7)"],
+                borderColor: ["rgba(54, 162, 235, 1)", "rgba(255, 99, 132, 1)"],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: { display: true, text: yTitle }
+                }
             },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: { display: true, text: yTitle }
-                    }
-                },
-                plugins: {
-                    legend: { display: false },
-                    tooltip: {
-                        callbacks: {
-                            label: function (context) {
-                                return `${context.dataset.label}: ${context.parsed.y.toLocaleString()} ${unit}`;
-                            }
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function (context) {
+                            return `${context.dataset.label}: ${context.parsed.y.toLocaleString()} ${unit}`;
                         }
                     }
                 }
             }
-        });
-    }
-});
+        }
+    });
+}
