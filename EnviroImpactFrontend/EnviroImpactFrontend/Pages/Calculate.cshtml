@@ -13,9 +13,9 @@
 
             <form id="impactForm">
                 <div class="mb-3">
-                    <label for="location" class="form-label" data-bs-toggle="tooltip"
-                           title="Choose the region where the facility is located. This affects electricity pricing and emissions.">
+                    <label for="location" class="form-label">
                         1. Region
+                        <i class="bi bi-info-circle ms-1" data-bs-toggle="tooltip" title="Choose the region where the facility is located. This affects electricity pricing and emissions."></i>
                     </label>
                     <select id="location" class="form-select">
                         <option value="">-- Loading regions... --</option>
@@ -97,6 +97,12 @@
                 <div class="d-grid mt-4">
                     <button type="submit" class="btn btn-primary btn-lg">Calculate</button>
                 </div>
+
+                <div id="loadingStatus" class="text-muted small mt-2" style="display: none;">
+                    <i class="bi bi-arrow-repeat me-1 spin"></i>Calculating your results...
+                </div>
+
+              
             </form>
         </div>
 

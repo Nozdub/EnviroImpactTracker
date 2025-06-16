@@ -7,11 +7,18 @@ let costChart = null;
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("impactForm");
     const resultCard = document.getElementById("resultCard");
+    const loadingStatus = document.getElementById("loadingStatus");
+
+    const submitButton = form.querySelector('button[type="submit"]');
+
+
 
     // Simple / Advanced Toggle Setup
     const simpleToggle = document.getElementById("simpleToggle");
     const advancedToggle = document.getElementById("advancedToggle");
     const advancedFields = document.getElementById("advancedFields");
+
+
 
     // Initial state = Simple active
     simpleToggle.classList.add("active");
@@ -73,6 +80,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // FORM SUBMIT HANDLER
     form.addEventListener("submit", async (event) => {
         event.preventDefault();
+
+        submitButton.disabled = true;
+
+        loadingStatus.style.display = "block";
+        resultCard.classList.add("inactive");  // Hide old result
 
         const data = {
             region: document.getElementById("location").value,
@@ -151,9 +163,17 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("resultCo2").innerText = result.estimated_co2_kg.toLocaleString();
             document.getElementById("resultCost").innerText = result.estimated_cost_nok.toLocaleString();
 
+            submitButton.disabled = false;
+
+            loadingStatus.style.display = "none";
+
             resultCard.classList.remove("inactive");
 
         } catch (err) {
+            submitButton.disabled = false;
+
+            loadingStatus.style.display = "none";
+            resultCard.classList.add("inactive");
             console.error("Error contacting backend:", err);
             alert("Could not connect to backend.");
         }
