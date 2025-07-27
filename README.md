@@ -15,15 +15,15 @@ All baseline assumptions are documented and sourced from public Norwegian data.
 
 ## Features
 
-- 🔎 Real-time environmental impact calculation
-- ⚡ Live electricity price + CO₂ emission factor APIs
-- 📊 Visual comparison against national benchmarks
-- 🗺 Region-specific modeling (NO1-NO5 grid zones)
-- 🏢 Support for multiple facility types (industry, farms, schools, hospitals, offices, data centers, residential, etc.)
-- 🔄 Custom overrides (kWh, emission factor, electricity price)
-- 📚 Full documentation of baseline assumptions ([baseline_data.md](baseline_data.md))
-- ✅ Full test suite with automated CI checks on GitHub Actions
-- 🚀 Responsive UI with clear "About" and transparency statements
+- Real-time environmental impact calculation
+- Live electricity price + CO₂ emission factor APIs
+- Visual comparison against national benchmarks
+- Region-specific modeling (NO1-NO5 grid zones)
+- Support for multiple facility types (industry, farms, schools, hospitals, offices, data centers, residential, etc.)
+- Custom overrides (kWh, emission factor, electricity price)
+- Full documentation of baseline assumptions ([baseline_data.md](baseline_data.md))
+- Full test suite with automated CI checks on GitHub Actions
+- Responsive UI with clear "About" and transparency statements
 
 ---
 
