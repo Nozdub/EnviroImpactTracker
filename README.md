@@ -65,7 +65,7 @@ All baseline assumptions are documented and sourced from public Norwegian data.
 ---
 
 ## Future updates
-- Add more advanced metrics.
+- Add more advanced metrics that give the end user more value. 
 - Find a usable price api that can return historical price data as well.
 - Update UI to feature more modern elements. 
 
