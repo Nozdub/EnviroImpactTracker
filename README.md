@@ -67,7 +67,8 @@ All baseline assumptions are documented and sourced from public Norwegian data.
 ## Future updates
 - Add more advanced metrics that give the end user more value. 
 - Find a usable price api that can return historical price data as well.
-- Update UI to feature more modern elements. 
+- Update UI to feature more modern elements.
+- Consider setting up persistant storage through a DB for own metrics and values based on the areas in Norway so we can better show estimates over a time period.
 
 ## Installation
 
